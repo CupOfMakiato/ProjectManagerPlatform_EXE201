@@ -64,5 +64,13 @@ namespace Server.Application.Mappers.BoardExtension
                 Description = updateBoardRequest.Description,
             };
         }
+        public static ChangeBoardNameDTO ToChangeBoardNameDTO(this ChangeBoardNameRequest changeBoardNameRequest)
+        {
+            return new ChangeBoardNameDTO
+            {
+                Id = (Guid)changeBoardNameRequest.Id,
+                Title = changeBoardNameRequest.Title,
+            };
+        }
     }
 }

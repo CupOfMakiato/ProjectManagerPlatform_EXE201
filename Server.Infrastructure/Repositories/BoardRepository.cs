@@ -64,10 +64,14 @@ namespace Server.Infrastructure.Repositories
         public async Task<List<Board>> SearchBoardsAsync(string textSearch)
         {
             return await _dbContext.Boards
-                .Where(s => s.Title.Contains(textSearch) || s.Description.Contains(textSearch))
+                .Where(s => s.Title.Contains(textSearch) 
+                //|| s.Description.Contains(textSearch)
+                )
                 .AsNoTracking()
                 .ToListAsync();
         }
+        // Filter 
+
 
     }
 }

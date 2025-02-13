@@ -111,7 +111,7 @@ namespace Server.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("UpdateBoard/{boardId}")]
+        [HttpPost("UpdateBoard")]
         [ProducesResponseType(200, Type = typeof(Result<object>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
         public async Task<IActionResult> UpdateBoard([FromForm] UpdateBoardRequest req)
@@ -131,6 +131,30 @@ namespace Server.API.Controllers
             var boardMapper = req.ToUpdateBoardDTO();
 
             var result = await _boardService.UpdateBoard(boardMapper);
+
+            return Ok(result);
+        }
+
+        [HttpPost("ChangeBoardName")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ChangeBoardName([FromForm] ChangeBoardNameRequest req)
+        {
+            var validator = new ChangeBoardNameRequestValidator();
+            var validatorResult = validator.Validate(req);
+            if (!validatorResult.IsValid)
+            {
+                return BadRequest(new Result<object>
+                {
+                    Error = 1,
+                    Message = "Invalid input!",
+                    Data = validatorResult.Errors.Select(x => x.ErrorMessage),
+                });
+            }
+
+            var boardMapper = req.ToChangeBoardNameDTO();
+
+            var result = await _boardService.ChangeBoardName(boardMapper);
 
             return Ok(result);
         }

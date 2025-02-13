@@ -18,5 +18,6 @@ namespace Server.Application.Interfaces
         Task<Result<object>> ArchiveBoard(Guid boardId);
         Task<Result<object>> UnarchiveBoard(Guid boardId);
         Task<Result<object>> UpdateBoard(UpdateBoardDTO updateBoardDTO);
+        Task<Result<object>> ChangeBoardName(ChangeBoardNameDTO changeBoardNameDTO);
     }
 }
