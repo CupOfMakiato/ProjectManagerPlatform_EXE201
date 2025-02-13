@@ -24,24 +24,7 @@ public class AppDbContext : DbContext
     public DbSet<CardActivity> CardActivities { get; set; }
 
     #endregion
-    //public string? GetConnectionString()
-    //{
-    //    IConfiguration configuration = new ConfigurationBuilder()
-    //        .SetBasePath(Directory.GetCurrentDirectory())
-    //        .AddJsonFile("appsettings.json", true, true)
-    //        .Build();
-    //    return configuration["ConnectionStrings:DefaultConnection"];
-    //}
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
 
-    //    if (!optionsBuilder.IsConfigured)
-    //    {
-    //        optionsBuilder.UseSqlServer(GetConnectionString(), optionsBuilder => optionsBuilder.EnableRetryOnFailure());
-    //        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    //    }
-
-    //}
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
@@ -65,15 +48,25 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Board>()
             .Property(s => s.Status)
             .HasConversion(v => v.ToString(), v => (BoardStatus)Enum.Parse(typeof(BoardStatus), v));
+        //modelBuilder.Entity<Board>()
+        //    .HasOne(c => c.BoardCreatedByUser)
+        //    .WithMany()
+        //    .HasForeignKey(c => c.BoardCreatedBy)
+        //    .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
         modelBuilder.Entity<Board>()
-            .HasOne(c => c.CreatedByUser)
+            .HasOne(c => c.BoardCreatedByUser)
             .WithMany()
             .HasForeignKey(c => c.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
 
 
+        //modelBuilder.Entity<Column>()
+        //    .HasOne(c => c.ColumnCreatedByUser)
+        //    .WithMany()
+        //    .HasForeignKey(c => c.ColumnCreatedBy)
+        //    .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
         modelBuilder.Entity<Column>()
-            .HasOne(c => c.CreatedByUser)
+            .HasOne(c => c.ColumnCreatedByUser)
             .WithMany()
             .HasForeignKey(c => c.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
@@ -84,8 +77,13 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Card>()
             .Property(s => s.Status)
             .HasConversion(v => v.ToString(), v => (CardStatus)Enum.Parse(typeof(CardStatus), v));
+        //modelBuilder.Entity<Card>()
+        //    .HasOne(c => c.CardCreatedByUser)
+        //    .WithMany()
+        //    .HasForeignKey(c => c.CardCreatedBy)
+        //    .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
         modelBuilder.Entity<Card>()
-            .HasOne(c => c.CreatedByUser)
+            .HasOne(c => c.CardCreatedByUser)
             .WithMany()
             .HasForeignKey(c => c.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict

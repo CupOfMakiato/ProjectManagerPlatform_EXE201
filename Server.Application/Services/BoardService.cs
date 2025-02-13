@@ -227,10 +227,34 @@ namespace Server.Application.Services
             };
         }
 
-        //public async Task<Result<object>> DeleteBoard()
-        //{
+        public async Task<Result<object>> DeleteBoard(Guid boardId)
+        {
+            // Retrieve the existing board
+            var existingBoard = await _unitOfWork.boardRepository.GetByIdAsync(boardId);
+            if (existingBoard == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Board not found",
+                    Data = null
+                };
+            }
 
-        //}
+            // Soft delete the board
+            _unitOfWork.boardRepository.SoftRemove(existingBoard);
+
+            // Save the changes
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0 ? "Board deleted successfully" : "Failed to delete board",
+                Data = null
+            };
+        }
+
 
     }
 }

@@ -159,5 +159,19 @@ namespace Server.API.Controllers
             return Ok(result);
         }
 
+        [HttpDelete("DeleteBoard/{boardId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> DeleteBoard(Guid boardId)
+        {
+            var result = await _boardService.DeleteBoard(boardId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(result);
+        }
+        // Filter
+
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Server.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class EnumTables : Migration
+    public partial class testUser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

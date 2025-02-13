@@ -22,7 +22,6 @@ namespace Server.Domain.Entities
         [ForeignKey("ColumnId")]
         public Column Column { get; set; }
         public ICollection<CardActivity> CardActivities { get; set; } = new List<CardActivity>();
-        public Guid CreatedBy { get; set; }
-        public User CreatedByUser { get; set; }
+        public User CardCreatedByUser { get; set; }
     }
 }

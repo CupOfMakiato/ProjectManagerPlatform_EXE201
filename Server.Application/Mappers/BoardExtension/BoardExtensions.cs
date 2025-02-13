@@ -23,7 +23,7 @@ namespace Server.Application.Mappers.BoardExtension
                 //ThumbNail = board.ThumbNail, //add later
                 Type = (Domain.Enums.BoardType)board.Type,
                 Status = (Domain.Enums.BoardStatus)board.Status,
-                CreatedByUser = board.CreatedByUser.ToUserDTO()
+                CreatedByUser = board.BoardCreatedByUser.ToUserDTO()
 
             };
         }
@@ -37,6 +37,7 @@ namespace Server.Application.Mappers.BoardExtension
                 //ThumbNail = board.ThumbNail, //add later
                 Type = addBoardDTO.Type,
                 Status = addBoardDTO.Status,
+                //BoardCreatedBy = addBoardDTO.UserId,
                 CreatedBy = addBoardDTO.UserId,
 
             };

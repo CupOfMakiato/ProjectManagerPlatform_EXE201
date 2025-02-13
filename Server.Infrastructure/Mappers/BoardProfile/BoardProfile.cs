@@ -16,7 +16,7 @@ namespace Server.Infrastructure.Mappers.BoardProfile
         {
             CreateMap<Board, ViewBoardDTO>()
     .ForMember(dest => dest.CreatedByUser, opt => opt.MapFrom(src =>
-        src.CreatedByUser != null ? new UserDTO { Id = src.CreatedByUser.Id, UserName = src.CreatedByUser.UserName } : null));
+        src.BoardCreatedByUser != null ? new UserDTO { Id = src.BoardCreatedByUser.Id, UserName = src.BoardCreatedByUser.UserName } : null));
 
         }
     }
