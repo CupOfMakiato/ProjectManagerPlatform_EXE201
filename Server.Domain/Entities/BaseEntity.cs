@@ -6,6 +6,8 @@
 
         public DateTime CreationDate { get; set; }
 
+        public Guid? CreatedBy { get; set; }
+
         public DateTime? ModificationDate { get; set; }
 
         public Guid? ModificationBy { get; set; }

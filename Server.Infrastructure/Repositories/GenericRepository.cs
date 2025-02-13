@@ -31,13 +31,14 @@ namespace Server.Infrastructure.Repositories
         public async Task AddAsync(TEntity entity)
         {
             entity.CreationDate = _timeService.GetCurrentTime();
-            //entity.CreatedBy = _claimsService.GetCurrentUserId;
+            entity.CreatedBy = _claimsService.GetCurrentUserId;
             await _dbSet.AddAsync(entity);
         }
 
         public void SoftRemove(TEntity entity)
         {
             entity.IsDeleted = true;
+            entity.DeletionDate = _timeService.GetCurrentTime();
             entity.DeleteBy = _claimsService.GetCurrentUserId;
             _dbSet.Update(entity);
         }
@@ -45,7 +46,7 @@ namespace Server.Infrastructure.Repositories
         public void Update(TEntity entity)
         {
             entity.ModificationDate = _timeService.GetCurrentTime();
-            //entity.ModificationBy = _claimsService.GetCurrentUserId;
+            entity.ModificationBy = _claimsService.GetCurrentUserId;
             _dbSet.Update(entity);
         }
 
@@ -54,7 +55,7 @@ namespace Server.Infrastructure.Repositories
             foreach (var entity in entities)
             {
                 entity.CreationDate = _timeService.GetCurrentTime();
-                //entity.CreatedBy = _claimsService.GetCurrentUserId;
+                entity.CreatedBy = _claimsService.GetCurrentUserId;
             }
             await _dbSet.AddRangeAsync(entities);
         }
@@ -95,7 +96,7 @@ namespace Server.Infrastructure.Repositories
             foreach (var entity in entities)
             {
                 entity.CreationDate = _timeService.GetCurrentTime();
-                //entity.CreatedBy = _claimsService.GetCurrentUserId;
+                entity.CreatedBy = _claimsService.GetCurrentUserId;
             }
             _dbSet.UpdateRange(entities);
         }

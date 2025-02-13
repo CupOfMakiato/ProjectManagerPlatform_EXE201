@@ -1,6 +1,7 @@
 ﻿using Server.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,6 @@ namespace Server.Domain.Entities
         public DateTime UpdatedAt { get; set; }
         public BoardStatus? Status { get; set; }
         public ICollection<Column> Columns { get; set; } = new List<Column>();
-        public Guid CreatedBy { get; set; }
-        public User CreatedByUser { get; set; }
+        public User BoardCreatedByUser { get; set; }
     }
 }

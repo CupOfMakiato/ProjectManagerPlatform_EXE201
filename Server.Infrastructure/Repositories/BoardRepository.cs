@@ -41,7 +41,7 @@ namespace Server.Infrastructure.Repositories
 
         public async Task<Board> GetBoardById(Guid id)
         {
-            return await _dbContext.Boards.Where(c => c.Id == id).Include(c => c.CreatedByUser).FirstOrDefaultAsync();
+            return await _dbContext.Boards.Where(c => c.Id == id).Include(c => c.BoardCreatedByUser).FirstOrDefaultAsync();
         }
         public async Task<List<Board>> GetPagedBoards(int pageIndex, int pageSize, BoardStatus? status = null)
         {
@@ -57,17 +57,21 @@ namespace Server.Infrastructure.Repositories
                 .OrderByDescending(c => c.UpdatedAt)  // Sorting by last updated
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
-                .Include(s => s.CreatedByUser)
+                .Include(s => s.BoardCreatedByUser)
                 .ToListAsync();
         }
 
         public async Task<List<Board>> SearchBoardsAsync(string textSearch)
         {
             return await _dbContext.Boards
-                .Where(s => s.Title.Contains(textSearch) || s.Description.Contains(textSearch))
+                .Where(s => s.Title.Contains(textSearch) 
+                //|| s.Description.Contains(textSearch)
+                )
                 .AsNoTracking()
                 .ToListAsync();
         }
+        // Filter 
+
 
     }
 }

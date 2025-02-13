@@ -8,7 +8,7 @@ namespace Server.API.Services
         public ClaimsService(IHttpContextAccessor httpContextAccessor)
         {
             // todo implementation to get the current userId
-            var Id = httpContextAccessor.HttpContext?.User?.FindFirstValue("userId");
+            var Id = httpContextAccessor.HttpContext?.User?.FindFirstValue("id");
             GetCurrentUserId = string.IsNullOrEmpty(Id) ? Guid.Empty : Guid.Parse(Id);
         }
 

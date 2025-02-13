@@ -201,5 +201,60 @@ namespace Server.Application.Services
             };
         }
 
+        public async Task<Result<object>> ChangeBoardName(ChangeBoardNameDTO changeBoardNameDTO)
+        {
+            var board = await _unitOfWork.boardRepository.GetByIdAsync(changeBoardNameDTO.Id);
+            if (board == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Board not found",
+                    Data = null
+                };
+            }
+
+            board.Title = changeBoardNameDTO.Title;
+
+            _unitOfWork.boardRepository.Update(board);
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0 ? "Change Board Name successfully" : "Change board name failed",
+                Data = null
+            };
+        }
+
+        public async Task<Result<object>> DeleteBoard(Guid boardId)
+        {
+            // Retrieve the existing board
+            var existingBoard = await _unitOfWork.boardRepository.GetByIdAsync(boardId);
+            if (existingBoard == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Board not found",
+                    Data = null
+                };
+            }
+
+            // Soft delete the board
+            _unitOfWork.boardRepository.SoftRemove(existingBoard);
+
+            // Save the changes
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0 ? "Board deleted successfully" : "Failed to delete board",
+                Data = null
+            };
+        }
+
+
     }
 }

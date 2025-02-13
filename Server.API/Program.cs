@@ -85,7 +85,7 @@ else
 
 app.UseExceptionHandler("/Error");
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowAllOrigins");
 
 app.UseSwagger();
 app.UseHttpsRedirection();

@@ -18,7 +18,6 @@ namespace Server.Domain.Entities
         [ForeignKey("BoardId")]
         public Board Board { get; set; }
         public ICollection<Card> Cards { get; set; } = new List<Card>();
-        public Guid CreatedBy { get; set; }
-        public User CreatedByUser { get; set; }
+        public User ColumnCreatedByUser { get; set; }
     }
 }
