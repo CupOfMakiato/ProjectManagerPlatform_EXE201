@@ -15,8 +15,6 @@ namespace Server.Domain.Entities
         public string Description { get; set; }
         public string Cover { get; set; }
         public string CoverId { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
         public CardStatus? Status { get; set; }
 
         [ForeignKey("ColumnId")]

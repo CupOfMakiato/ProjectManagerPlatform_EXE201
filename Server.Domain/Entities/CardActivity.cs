@@ -13,11 +13,10 @@ namespace Server.Domain.Entities
         public Guid CardId { get; set; }
         public string Action { get; set; }
         public string Detail { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
         public string Status { get; set; }
 
         [ForeignKey("CardId")]
         public Card Card { get; set; }
+        public User User { get; set; }
     }
 }
