@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server.Application.Common;
 using Server.Application.Interfaces;
 using Server.Application.Repositories;
 using Server.Domain.Entities;
@@ -13,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Server.Infrastructure.Repositories
 {
-    public class BoardRepository :GenericRepository<Board>, IBoardRepository
+    public class CardRepository : GenericRepository<Card>, ICardRepository
     {
         private readonly AppDbContext _dbContext;
 
-        public BoardRepository(AppDbContext dbContext,
+        public CardRepository(AppDbContext dbContext,
             ICurrentTime timeService,
             IClaimsService claimsService)
             : base(dbContext,
@@ -26,10 +25,9 @@ namespace Server.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-
-        public async Task<int> GetTotalBoardCount(BoardStatus? status = null)
+        public async Task<int> GetTotalCardCount(CardStatus? status = null)
         {
-            var query = _dbContext.Boards.Where(c => !c.IsDeleted);
+            var query = _dbContext.Cards.Where(c => !c.IsDeleted);
 
             if (status.HasValue)
             {
@@ -39,13 +37,28 @@ namespace Server.Infrastructure.Repositories
             return await query.CountAsync();
         }
 
-        public async Task<Board> GetBoardById(Guid id)
+        public async Task<List<Card>> GetAllCards()
         {
-            return await _dbContext.Boards.Where(c => c.Id == id).Include(c => c.BoardCreatedByUser).FirstOrDefaultAsync();
+            return await _dbContext.Cards.ToListAsync();
         }
-        public async Task<List<Board>> GetPagedBoards(int pageIndex, int pageSize, BoardStatus? status = null)
+
+        public async Task<List<Card>> GetAllOpenCards()
         {
-            var query = _dbContext.Boards
+            return await _dbContext.Cards.Where(c => c.Status != CardStatus.Open).ToListAsync();
+        }
+
+        public async Task<List<Card>> GetAllArchivedCards()
+        {
+            return await _dbContext.Cards.Where(c => c.Status != CardStatus.Closed).ToListAsync();
+        }
+
+        public async Task<Card> GetCardById(Guid id)
+        {
+            return await _dbContext.Cards.Where(c => c.Id == id).Include(c => c.CardCreatedByUser).FirstOrDefaultAsync();
+        }
+        public async Task<List<Card>> GetPagedCards(int pageIndex, int pageSize, CardStatus? status = null)
+        {
+            var query = _dbContext.Cards
                 .Where(c => !c.IsDeleted);
 
             if (status.HasValue)
@@ -57,22 +70,21 @@ namespace Server.Infrastructure.Repositories
                 .OrderByDescending(c => c.ModificationDate)  // Sorting by last updated
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
-                .Include(s => s.BoardCreatedByUser)
+                .Include(s => s.CardCreatedByUser)
                 .ToListAsync();
         }
 
-        public async Task<List<Board>> SearchBoardsAsync(string textSearch)
+        public async Task<List<Card>> SearchCardsAsync(string textSearch)
         {
-            return await _dbContext.Boards
-                .Where(s => s.Title.Contains(textSearch) 
+            return await _dbContext.Cards
+                .Where(s => s.Title.Contains(textSearch)
                 //|| s.Description.Contains(textSearch)
                 )
                 .AsNoTracking()
                 .ToListAsync();
         }
-
         // Filter 
-
+        // SOS
 
     }
 }

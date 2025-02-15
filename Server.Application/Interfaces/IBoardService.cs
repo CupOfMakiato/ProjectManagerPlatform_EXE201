@@ -20,6 +20,7 @@ namespace Server.Application.Interfaces
         Task<Result<object>> UpdateBoard(UpdateBoardDTO updateBoardDTO);
         Task<Result<object>> ChangeBoardName(ChangeBoardNameDTO changeBoardNameDTO);
         Task<Result<object>> DeleteBoard(Guid boardId);
+        Task<Result<object>> ViewAllCardsFromABoard(Guid boardId);
 
         // Filter 
     }

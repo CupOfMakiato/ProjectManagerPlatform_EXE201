@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Server.Domain\Server.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstractions\RequestAndResponse\Card\" />
+  </ItemGroup>
+
 </Project>

@@ -7,6 +7,7 @@ using Server.Application.Repositories;
 using Server.Contracts.Abstractions.CloudinaryService;
 using Server.Contracts.Abstractions.Shared;
 using Server.Contracts.DTO.Board;
+using Server.Contracts.DTO.Card;
 using Server.Domain.Entities;
 using Server.Domain.Enums;
 using System;
@@ -25,7 +26,8 @@ namespace Server.Application.Services
         private readonly IEmailService _emailService;
         private readonly IUserService _userService;
         private readonly IBoardRepository _boardRepository;
-        public BoardService(IUnitOfWork unitOfWork, IMapper mapper, ICloudinaryService cloudinaryService, IHttpContextAccessor contextAccessor, IEmailService emailService, IUserService userService, IBoardRepository boardRepository)
+        private readonly ICardRepository _cardRepository;
+        public BoardService(IUnitOfWork unitOfWork, IMapper mapper, ICloudinaryService cloudinaryService, IHttpContextAccessor contextAccessor, IEmailService emailService, IUserService userService, IBoardRepository boardRepository, ICardRepository cardRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -33,6 +35,7 @@ namespace Server.Application.Services
             _emailService = emailService;
             _userService = userService;
             _boardRepository = boardRepository;
+            _cardRepository = cardRepository;   
         }
         public async Task<Pagination<ViewBoardDTO>> ViewAllBoards(int pageIndex, int pageSize)
         {
@@ -252,6 +255,31 @@ namespace Server.Application.Services
                 Error = result > 0 ? 0 : 1,
                 Message = result > 0 ? "Board deleted successfully" : "Failed to delete board",
                 Data = null
+            };
+        }
+
+        public async Task<Result<object>> ViewAllCardsFromABoard(Guid boardId)
+        {
+            // Check if the board exists
+            var existingBoard = await _unitOfWork.boardRepository.GetByIdAsync(boardId);
+            if (existingBoard == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Board not found",
+                    Data = null
+                };
+            }
+            var openCards = await _unitOfWork.cardRepository.GetAllOpenCards();
+
+            var mappedCards = _mapper.Map<List<ViewCardDTO>>(openCards);
+
+            return new Result<object>
+            {
+                Error = 0,
+                Message = "Cards retrieved successfully",
+                Data = mappedCards
             };
         }
 
