@@ -54,7 +54,7 @@ namespace Server.Infrastructure.Repositories
             }
 
             return await query
-                .OrderByDescending(c => c.UpdatedAt)  // Sorting by last updated
+                .OrderByDescending(c => c.ModificationDate)  // Sorting by last updated
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .Include(s => s.BoardCreatedByUser)

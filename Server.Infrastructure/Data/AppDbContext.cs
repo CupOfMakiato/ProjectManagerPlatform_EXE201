@@ -87,5 +87,11 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(c => c.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+
+        modelBuilder.Entity<CardActivity>()
+            .HasOne(c => c.User)
+            .WithMany()
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
     }
 }
