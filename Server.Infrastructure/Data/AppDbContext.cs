@@ -21,7 +21,10 @@ public class AppDbContext : DbContext
     public DbSet<Column> Columns { get; set; }
     public DbSet<Board> Boards { get; set; }
     public DbSet<Card> Cards { get; set; }
-    public DbSet<CardActivity> CardActivities { get; set; }
+    public DbSet<Attachment> Attachments { get; set; }
+    public DbSet<Activity> Activities { get; set; }
+    public DbSet<Label> Labels { get; set; }
+    public DbSet<Checklist> Checklists{ get; set; }
 
     #endregion
 
@@ -30,8 +33,8 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Role>().HasData(
            new Role { Id = 1, RoleName = "Admin" },
-           new Role { Id = 2, RoleName = "User" },
-           new Role { Id = 3, RoleName = "Staff" }
+           new Role { Id = 2, RoleName = "User" }
+           //new Role { Id = 3, RoleName = "Staff" }
         );
 
         //User
@@ -88,10 +91,28 @@ public class AppDbContext : DbContext
             .HasForeignKey(c => c.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
 
-        modelBuilder.Entity<CardActivity>()
-            .HasOne(c => c.User)
+        //modelBuilder.Entity<Activity>()
+        //.HasOne(a => a.Card)
+        //.WithMany()
+        //.HasForeignKey(a => a.CardId)
+        //.OnDelete(DeleteBehavior.Restrict);
+
+        //modelBuilder.Entity<Activity>()
+        //    .HasOne(a => a.Board)
+        //    .WithMany()
+        //    .HasForeignKey(a => a.BoardId)
+        //    .OnDelete(DeleteBehavior.Restrict);
+
+        //modelBuilder.Entity<Activity>()
+        //    .HasOne(a => a.Column)
+        //    .WithMany()
+        //    .HasForeignKey(a => a.ColumnId)
+        //    .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Activity>()
+            .HasOne(a => a.User)
             .WithMany()
-            .HasForeignKey(c => c.UserId)
-            .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+            .HasForeignKey(a => a.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -32,6 +32,7 @@ namespace Server.Infrastructure
             services.AddScoped<IOtpService, OtpService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBoardService, BoardService>();
+            services.AddScoped<ICardService, CardService>();
             services.AddScoped<PasswordService>();
             services.AddScoped<RedisService>();
             services.AddScoped<OtpService>();
@@ -46,6 +47,7 @@ namespace Server.Infrastructure
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IBoardRepository, BoardRepository>();
+            services.AddScoped<ICardRepository, CardRepository>();
             //
             services.Configure<CloudinarySetting>(configuration.GetSection("CloudinarySetting"));
 

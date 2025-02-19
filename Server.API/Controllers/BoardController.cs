@@ -171,6 +171,20 @@ namespace Server.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("ViewAllCardsFromABoard/{boardId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ViewAllCardsFromABoard(Guid boardId)
+        {
+            var result = await _boardService.ViewAllCardsFromABoard(boardId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(result);
+        }
+
         // Filter
 
     }
