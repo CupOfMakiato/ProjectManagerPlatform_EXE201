@@ -11,7 +11,7 @@ namespace Server.Domain.Entities
     public class Column : BaseEntity
     {
         public string Title { get; set; }
-        public int ColumnOrder { get; set; }
+        public int CollumnPosition { get; set; }
         public ColumnStatus? Status { get; set; }
         public Guid BoardId { get; set; }
 

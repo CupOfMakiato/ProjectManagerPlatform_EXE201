@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Server.Application.Repositories
 {
-    public interface ICardRepository
+    public interface ICardRepository : IGenericRepository<Card>
     {
         Task<int> GetTotalCardCount(CardStatus? status = null);
         Task<List<Card>> GetAllCards();

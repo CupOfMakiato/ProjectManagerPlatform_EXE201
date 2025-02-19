@@ -67,10 +67,10 @@ namespace Server.Application.Services
         }
 
 
-        public async Task<Result<object>> ViewBoardById(Guid serviceId)
+        public async Task<Result<object>> ViewBoardById(Guid cardId)
         {
             ViewBoardDTO result = null;
-            var board = await _unitOfWork.boardRepository.GetBoardById(serviceId);
+            var board = await _unitOfWork.boardRepository.GetBoardById(cardId);
             if (board != null)
                 result = board.ToViewBoardDTO();
             return new Result<object>

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Server.Infrastructure.Repositories
 {
-    public class BoardRepository :GenericRepository<Board>, IBoardRepository
+    public class BoardRepository : GenericRepository<Board>, IBoardRepository
     {
         private readonly AppDbContext _dbContext;
 

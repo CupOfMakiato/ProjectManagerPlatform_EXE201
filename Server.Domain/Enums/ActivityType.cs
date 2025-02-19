@@ -18,15 +18,19 @@ namespace Server.Domain.Enums
         // Column-related activities
         ColumnCreated,
         ColumnRenamed,
+        ColumnArchived,
+        ColumnUnarchived,
+        ColumnMoved,
         ColumnDeleted,
 
         // Card-related activities
         CardCreated,
         CardUpdated,
+        CardArchived,
+        CardUnarchived,
         CardMoved,   
         CardDeleted,
-        CardArchived,
-        CardUnarchived
+        
     }
 
 }
