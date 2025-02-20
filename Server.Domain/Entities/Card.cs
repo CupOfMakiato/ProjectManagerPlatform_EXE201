@@ -20,6 +20,8 @@ namespace Server.Domain.Entities
 
         [ForeignKey("ColumnId")]
         public Column Column { get; set; }
+
+        [ForeignKey("AttachmentId")]
         public Guid AttachmentId { get; set; }
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
 

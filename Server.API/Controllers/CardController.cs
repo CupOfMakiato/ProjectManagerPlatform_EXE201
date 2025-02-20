@@ -10,6 +10,7 @@ using Server.Contracts.Abstractions.RequestAndResponse.Board;
 using Server.Contracts.Abstractions.RequestAndResponse.Card;
 using Server.Contracts.Abstractions.Shared;
 using Server.Contracts.DTO.Board;
+using Server.Contracts.DTO.Card;
 
 namespace Server.API.Controllers
 {
@@ -27,19 +28,19 @@ namespace Server.API.Controllers
         }
 
         [HttpGet("ViewAllCards")]
-        [ProducesResponseType(200, Type = typeof(ViewBoardDTO))]
+        [ProducesResponseType(200, Type = typeof(ViewCardDTO))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
-        public async Task<IActionResult> ViewAllBoards()
+        public async Task<IActionResult> ViewAllCards()
         {
-            var board = await _cardService.ViewAllCards();
+            var card = await _cardService.ViewAllCards();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            return Ok(board);
+            return Ok(card);
         }
 
         [HttpGet("ViewCardById/{cardId}")]
-        [ProducesResponseType(200, Type = typeof(ViewBoardDTO))]
+        [ProducesResponseType(200, Type = typeof(ViewCardDTO))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
         public async Task<IActionResult> ViewCardById(Guid cardId)
         {
