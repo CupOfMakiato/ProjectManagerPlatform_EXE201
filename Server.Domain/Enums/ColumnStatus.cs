@@ -8,7 +8,7 @@ namespace Server.Domain.Enums
 {
     public enum ColumnStatus
     {
-        Closed = 1,
-        Open = 0
+        Closed,
+        Open
     }
 }

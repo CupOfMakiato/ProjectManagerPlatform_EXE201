@@ -15,6 +15,7 @@ namespace Server.Application
         ISubCategoryRepository subCategoryRepository { get; }
         IAuthRepository authRepository { get; }
         IBoardRepository boardRepository { get; }
+        IColumnRepository columnRepository { get; }
 
 
         public Task<int> SaveChangeAsync();

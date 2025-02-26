@@ -18,11 +18,12 @@ namespace Server.Infrastructure
         private readonly IAuthRepository _authRepository;
         private readonly IUserRepository _userRepository;
         private readonly IBoardRepository _boardRepository;
+        private readonly IColumnRepository _columnRepository;
 
 
 
         public UnitOfWork(AppDbContext dbContext, ISubCategoryRepository subCategoryRepository, ICategoryRepository categoryRepository,
-            IAuthRepository authRepository, IUserRepository userRepository, IBoardRepository boardRepository)
+            IAuthRepository authRepository, IUserRepository userRepository, IBoardRepository boardRepository, IColumnRepository columnRepository)
         {
             _dbContext = dbContext;
             _subCategoryRepository = subCategoryRepository;
@@ -30,6 +31,7 @@ namespace Server.Infrastructure
             _authRepository = authRepository;
             _userRepository = userRepository;
             _boardRepository = boardRepository;
+            _columnRepository = columnRepository;
         }
 
         public ICategoryRepository categoryRepository => _categoryRepository;
@@ -38,6 +40,7 @@ namespace Server.Infrastructure
         public IAuthRepository authRepository => _authRepository;
         public IUserRepository userRepository => _userRepository;
         public IBoardRepository boardRepository => _boardRepository;
+        public IColumnRepository columnRepository => _columnRepository;
 
         public async Task<int> SaveChangeAsync()
         {
