@@ -12,18 +12,18 @@ namespace Server.Application.Mappers.ColumnExtension
 {
     public static class ColumnExtensions
     {
-        public static ViewColumnDTO ToViewColumnDTO(this Column column)
-        {
-            return new ViewColumnDTO
-            {
-                Id = column.Id,
-                Title = column.Title,
-                CollumnPosition = column.CollumnPosition,
-                Status = (Domain.Enums.ColumnStatus)column.Status,
-                BoardId = column.BoardId,
-                CreatedByUser = column.ColumnCreatedByUser.ToUserDTO()
+        //public static ViewColumnDTO ToViewColumnDTO(this Column column)
+        //{
+        //    return new ViewColumnDTO
+        //    {
+        //        Id = column.Id,
+        //        Title = column.Title,
+        //        //CollumnPosition = column.CollumnPosition,
+        //        Status = (Domain.Enums.ColumnStatus)column.Status,
+        //        BoardId = column.BoardId,
+        //        CreatedByUser = column.ColumnCreatedByUser.ToUserDTO()
 
-            };
-        }
+        //    };
+        //}
     }
 }

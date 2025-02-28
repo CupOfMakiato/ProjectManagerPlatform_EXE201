@@ -14,7 +14,7 @@ namespace Server.Domain.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public int CardPosition { get; set; }
-        public string? Cover { get; set; }
+        public string? Cover { get; set; } // might delete
         public CardStatus? Status { get; set; }
         public AssignedCompletion? AssignedCompletion { get; set; }
 

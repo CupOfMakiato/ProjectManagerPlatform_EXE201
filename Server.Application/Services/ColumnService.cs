@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Server.Application.Common;
 using Server.Application.Interfaces;
 using Server.Application.Mappers.CardExtension;
-using Server.Application.Mappers.ColumnExtension;
 using Server.Application.Mappers.BoardExtension;
 using Server.Application.Mappers.ColumsExtensions;
 using Server.Application.Repositories;
@@ -21,7 +20,6 @@ using System.Threading.Tasks;
 
 namespace Server.Application.Services
 {
-    public class ColumnService : IColumnService
     public class ColumnService : IColumnsService
     {
         private readonly IMapper _mapper;
@@ -30,14 +28,11 @@ namespace Server.Application.Services
         private readonly IEmailService _emailService;
         private readonly IUserService _userService;
         private readonly IColumnRepository _columnRepository;
-        public ColumnService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor contextAccessor, IEmailService emailService, IUserService userService, IColumnRepository columnRepository)
         private readonly IBoardService _boardService;
 
         public ColumnService(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IEmailService emailService, IUserService userService, IColumnRepository columnRepository, IBoardService boardService)
         {
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _httpContextAccessor = contextAccessor;
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
             _emailService = emailService;
@@ -52,10 +47,8 @@ namespace Server.Application.Services
             return mappedColumns;
         }
 
-        public async Task<Result<object>> ViewAllColumns()
         public async Task<Result<object>> ViewColumnsById(Guid columnId)
         {
-            var columns = await _unitOfWork.columnRepository.GetAllOpenColumns();
             ViewColumnDTO result = null;
             var column = await _unitOfWork.columnRepository.GetColumnsById(columnId);
             if (column != null)
@@ -77,7 +70,6 @@ namespace Server.Application.Services
 
             var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
 
-            var result = columns.Select(column => column.ToViewColumnDTO()).ToList();
             if (jwtToken == null)
                 return new Result<object>() { Error = 1, Message = "Invalid token", Data = null };
             var userId = Guid.Parse(jwtToken.Claims.First(claim => claim.Type == "id").Value);
@@ -92,28 +84,20 @@ namespace Server.Application.Services
                 };
             }
             var columsMapper = addColumsDTO.ToColums(userId);
-            
+
             await _unitOfWork.columnRepository.AddAsync(columsMapper);
             var result = await _unitOfWork.SaveChangeAsync();
 
             return new Result<object>
             {
-                Error = result.Any() ? 0 : 1,
-                Message = result.Any() ? "Columns retrieved successfully" : "No open columns found",
-                Data = result
                 Error = result > 0 ? 0 : 1,
                 Message = result > 0 ? "Add new columm successfully" : "Add new columm fail",
                 Data = null
             };
         }
 
-        public async Task<Result<object>> ViewColumnById(Guid columnId)
         public Task<Result<object>> UpdateColumn(Guid id, UpdateBoardDTO updateBoardDTO)
         {
-            ViewColumnDTO result = null;
-            var card = await _unitOfWork.columnRepository.GetColumnById(columnId);
-            if (card != null)
-                result = card.ToViewColumnDTO();
             throw new NotImplementedException();
         }
 
@@ -133,9 +117,6 @@ namespace Server.Application.Services
             var result = await _unitOfWork.SaveChangeAsync();
             return new Result<object>
             {
-                Error = result != null ? 0 : 1,
-                Message = result != null ? "Get column successfully" : "Get column fail",
-                Data = result
                 Error = result > 0 ? 0 : 1,
                 Message = result > 0 ? "Column deleted successfully" : "Failed to delete column",
                 Data = null
