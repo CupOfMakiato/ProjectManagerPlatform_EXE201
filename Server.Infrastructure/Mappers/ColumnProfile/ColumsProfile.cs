@@ -17,9 +17,10 @@ namespace Server.Infrastructure.Mappers.ColumnProfile
         {
             CreateMap<Column, ViewColumnDTO>()
                 .ForMember(dest => dest.CreatedByUser, opt => opt.MapFrom(src =>
-        src.ColumnCreatedByUser != null ? new UserDTO { Id = src.ColumnCreatedByUser.Id, UserName = src.ColumnCreatedByUser.UserName } : null))
+        src.ColumnCreatedByUser != null ? new UserDTO { Id = src.ColumnCreatedByUser.Id, UserName = src.ColumnCreatedByUser.UserName } : null));
+            CreateMap<Column, ViewColumnDTO>()
                 .ForMember(dest => dest.Board, opt => opt.MapFrom(src =>
-        src.ColumnCreatedByUser != null ? new ViewBoardDTO { Id = src.Board.Id } : null));
+        src.Board != null ? new ViewBoardDTO { Id = src.Board.Id } : null));
         }
     }
 }

@@ -15,6 +15,8 @@ namespace Server.Contracts.DTO.Column
         public string Title { get; set; }
         public ViewBoardDTO? Board { get; set; }
         public UserDTO? CreatedByUser { get; set; }
+        public DateTime CreationDate { get; set; }
+        public Boolean IsDeleted { get; set; }
         public ColumnStatus Status { get; set; }
     }
 }

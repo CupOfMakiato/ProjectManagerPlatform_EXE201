@@ -28,9 +28,10 @@ namespace Server.Infrastructure.Repositories
         public async Task<Column> GetColumnsById(Guid id)
         {
             var board = await _dbContext.Columns
+                .Where(c => c.Id == id)
                 .Include(c => c.Board)
                 .Include(c => c.ColumnCreatedByUser)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .FirstOrDefaultAsync();
             return board;
         }
 

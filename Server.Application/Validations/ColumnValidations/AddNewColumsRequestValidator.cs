@@ -13,8 +13,6 @@ namespace Server.Application.Validations.ColumnValidations
     {
         public AddNewColumsRequestValidator()
         {
-            RuleFor(x => x.UserId)
-            .NotEmpty().WithMessage("UserId is required.");
 
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Title is required.");

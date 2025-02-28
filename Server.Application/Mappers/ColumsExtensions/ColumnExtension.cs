@@ -1,4 +1,5 @@
-﻿using Server.Application.Mappers.UserExtension;
+﻿using Server.Application.Mappers.BoardExtension;
+using Server.Application.Mappers.UserExtension;
 using Server.Contracts.Abstractions.RequestAndResponse.Board;
 using Server.Contracts.Abstractions.RequestAndResponse.Column;
 using Server.Contracts.DTO.Board;
@@ -22,17 +23,17 @@ namespace Server.Application.Mappers.ColumsExtensions
                 Id = column.Id,
                 Title = column.Title,
                 Status = (Domain.Enums.ColumnStatus)column.Status,
-                CreatedByUser = column.ColumnCreatedByUser.ToUserDTO()
+                CreatedByUser = column.ColumnCreatedByUser.ToUserDTO(),
+                Board = column.Board.ToViewBoardDTO()
             };
         }
-        public static Column ToColums(this AddColumsDTO addColumsDTO)
+        public static Column ToColums(this AddColumsDTO addColumsDTO, Guid userId)
         {
             return new Column
             {
-                Id = addColumsDTO.Id,
                 Title = addColumsDTO.Title,
                 Status = addColumsDTO.Status,
-                CreatedBy = addColumsDTO.UserId,
+                CreatedBy = userId,
                 BoardId = addColumsDTO.BoardId
 
             };
@@ -41,8 +42,6 @@ namespace Server.Application.Mappers.ColumsExtensions
         {
             return new AddColumsDTO
             {
-                Id = (Guid)addNewColumnRequest.Id,
-                UserId = addNewColumnRequest.UserId,
                 Title = addNewColumnRequest.Title,
                 BoardId = addNewColumnRequest.BoardId,
                 Status = ColumnStatus.Open,

@@ -68,7 +68,6 @@ namespace Server.API.Controllers
                     Data = validatorResult.Errors.Select(x => x.ErrorMessage),
                 });
             }
-            req.Id = Guid.NewGuid();
             var columnMapper = req.ToAddColumsDTO();
             var result = await _columnsService.AddNewColumn(columnMapper);
             return Ok(result);

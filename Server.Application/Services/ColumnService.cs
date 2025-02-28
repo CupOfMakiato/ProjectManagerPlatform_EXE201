@@ -11,6 +11,7 @@ using Server.Contracts.DTO.Column;
 using Server.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,7 +47,10 @@ namespace Server.Application.Services
 
         public async Task<Result<object>> ViewColumnsById(Guid columnId)
         {
-            var result = await _unitOfWork.columnRepository.GetByIdAsync(columnId);
+            ViewColumnDTO result = null;
+            var column = await _unitOfWork.columnRepository.GetByIdAsync(columnId);
+            if (column != null)
+                result = column.ToViewColumnDTO();
             return new Result<object>
             {
                 Error = result != null ? 0 : 1,
@@ -57,6 +61,16 @@ namespace Server.Application.Services
 
         public async Task<Result<object>> AddNewColumn(AddColumsDTO addColumsDTO)
         {
+            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+            if (token == null)
+                return new Result<object>() { Error = 1, Message = "Token not found", Data = null };
+
+            var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+                return new Result<object>() { Error = 1, Message = "Invalid token", Data = null };
+            var userId = Guid.Parse(jwtToken.Claims.First(claim => claim.Type == "id").Value);
             var getBoard = await _unitOfWork.boardRepository.GetByIdAsync(addColumsDTO.BoardId);
             if (getBoard == null)
             {
@@ -67,7 +81,7 @@ namespace Server.Application.Services
                     Data = null
                 };
             }
-            var columsMapper = addColumsDTO.ToColums();
+            var columsMapper = addColumsDTO.ToColums(userId);
             
             await _unitOfWork.columnRepository.AddAsync(columsMapper);
             var result = await _unitOfWork.SaveChangeAsync();
