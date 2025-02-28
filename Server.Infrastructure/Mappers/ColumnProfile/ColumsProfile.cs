@@ -11,16 +11,20 @@ using System.Threading.Tasks;
 
 namespace Server.Infrastructure.Mappers.ColumnProfile
 {
-    public class ColumsProfile : Profile
-    { 
-        public ColumsProfile()
+    public class ColumnsProfile : Profile
+    {
+        public ColumnsProfile()
         {
             CreateMap<Column, ViewColumnDTO>()
                 .ForMember(dest => dest.CreatedByUser, opt => opt.MapFrom(src =>
-        src.ColumnCreatedByUser != null ? new UserDTO { Id = src.ColumnCreatedByUser.Id, UserName = src.ColumnCreatedByUser.UserName } : null));
-            CreateMap<Column, ViewColumnDTO>()
+                    src.ColumnCreatedByUser != null
+                        ? new UserDTO { Id = src.ColumnCreatedByUser.Id, UserName = src.ColumnCreatedByUser.UserName }
+                        : null))
                 .ForMember(dest => dest.Board, opt => opt.MapFrom(src =>
-        src.Board != null ? new ViewBoardDTO { Id = src.Board.Id } : null));
+                    src.Board != null
+                        ? new ViewBoardDTO { Id = src.Board.Id, Title = src.Board.Title }
+                        : null));
         }
     }
+
 }

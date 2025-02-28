@@ -13,9 +13,8 @@ namespace Server.Domain.Entities
         public string Title { get; set; }
         public int ColumnOrder { get; set; }
         public ColumnStatus? Status { get; set; }
-        public Guid BoardId { get; set; }
-
         [ForeignKey("BoardId")]
+        public Guid BoardId { get; set; }
         public Board Board { get; set; }
         public ICollection<Card> Cards { get; set; } = new List<Card>();
         public User ColumnCreatedByUser { get; set; }

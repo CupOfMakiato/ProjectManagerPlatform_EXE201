@@ -40,7 +40,7 @@ namespace Server.Application.Services
         }
         public async Task<List<ViewColumnDTO>> ViewAllColumns()
         {
-            var result = await _unitOfWork.columnRepository.GetAllAsync();
+            var result = await _unitOfWork.columnRepository.GetListColumns();
             var mappedColumns = _mapper.Map<List<ViewColumnDTO>>(result);
             return mappedColumns;
         }
@@ -48,7 +48,7 @@ namespace Server.Application.Services
         public async Task<Result<object>> ViewColumnsById(Guid columnId)
         {
             ViewColumnDTO result = null;
-            var column = await _unitOfWork.columnRepository.GetByIdAsync(columnId);
+            var column = await _unitOfWork.columnRepository.GetColumnsById(columnId);
             if (column != null)
                 result = column.ToViewColumnDTO();
             return new Result<object>
