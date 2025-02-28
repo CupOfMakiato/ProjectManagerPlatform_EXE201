@@ -72,5 +72,18 @@ namespace Server.API.Controllers
             var result = await _columnsService.AddNewColumn(columnMapper);
             return Ok(result);
         }
+
+        [HttpDelete("DeleteColumn/{columnId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> DeleteColums(Guid columnId)
+        {
+            var result = await _columnsService.DeleteColumn(columnId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(result);
+        }
     }
 }
