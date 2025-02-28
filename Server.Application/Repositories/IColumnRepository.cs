@@ -14,5 +14,7 @@ namespace Server.Application.Repositories
         Task<List<Column>> GetAllOpenColumns();
         Task<List<Column>> GetAllArchivedColumns();
         Task<Column> GetColumnById(Guid id);
+        Task<Column> GetColumnsById(Guid id);
+        Task<List<Column>> GetListColumns();
     }
 }

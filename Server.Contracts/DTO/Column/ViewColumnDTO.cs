@@ -1,4 +1,5 @@
-﻿using Server.Contracts.DTO.User;
+﻿using Server.Contracts.DTO.Board;
+using Server.Contracts.DTO.User;
 using Server.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,10 @@ namespace Server.Contracts.DTO.Column
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public int CollumnPosition { get; set; }
-        public ColumnStatus? Status { get; set; }
-        public Guid BoardId { get; set; }
+        public ViewBoardDTO? Board { get; set; }
         public UserDTO? CreatedByUser { get; set; }
+        public DateTime CreationDate { get; set; }
+        public Boolean IsDeleted { get; set; }
+        public ColumnStatus Status { get; set; }
     }
 }
