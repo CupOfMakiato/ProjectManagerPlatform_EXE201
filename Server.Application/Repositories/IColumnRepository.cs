@@ -10,10 +10,10 @@ namespace Server.Application.Repositories
 {
     public interface IColumnRepository : IGenericRepository<Column>
     {
-        Task<int> GetTotalColumnCount(ColumnStatus? status = null);
-        Task<List<Column>> GetAllOpenColumns();
-        Task<List<Column>> GetAllArchivedColumns();
-        Task<Column> GetColumnById(Guid id);
+        //Task<int> GetTotalColumnCount(ColumnStatus? status = null);
+        //Task<List<Column>> GetAllOpenColumns();
+        //Task<List<Column>> GetAllArchivedColumns();
+        //Task<Column> GetColumnById(Guid id);
         Task<Column> GetColumnsById(Guid id);
         Task<List<Column>> GetListColumns();
     }

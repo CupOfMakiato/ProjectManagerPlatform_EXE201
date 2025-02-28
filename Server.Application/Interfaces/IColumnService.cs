@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Application.Interfaces
-{
-    public interface IColumnService
-    {
-        Task<Result<object>> ViewAllColumns();
-        Task<Result<object>> ViewColumnById(Guid columnId);
-    }
-}
+//namespace Server.Application.Interfaces
+//{
+//    public interface IColumnService
+//    {
+//        Task<Result<object>> ViewAllColumns();
+//        Task<Result<object>> ViewColumnById(Guid columnId);
+//    }
+//}
