@@ -14,6 +14,11 @@ namespace Server.Domain.Entities
         public string FileType { get; set; }
         public string FilePublicId { get; set; }
         public bool IsCover { get; set; } = false;
+
+        public Guid CardId { get; set; }
+
+        [ForeignKey("CardId")]
+        public Card Card { get; set; }
     }
 
 }

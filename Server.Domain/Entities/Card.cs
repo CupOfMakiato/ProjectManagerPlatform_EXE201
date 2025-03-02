@@ -14,15 +14,11 @@ namespace Server.Domain.Entities
         public string Title { get; set; }
         public string? Description { get; set; }
         public int CardPosition { get; set; }
-        public string? Attachment { get; set; } // might delete
         public CardStatus? Status { get; set; }
         public AssignedCompletion? AssignedCompletion { get; set; }
 
         [ForeignKey("ColumnId")]
         public Column Column { get; set; }
-
-        [ForeignKey("AttachmentId")]
-        public Guid AttachmentId { get; set; }
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
         // List of attachments

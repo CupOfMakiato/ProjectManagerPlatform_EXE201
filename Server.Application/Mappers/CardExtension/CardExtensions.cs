@@ -1,4 +1,6 @@
-﻿using Server.Application.Mappers.UserExtension;
+﻿using Server.Application.Mappers.AttachmentExtension;
+using Server.Application.Mappers.ColumsExtensions;
+using Server.Application.Mappers.UserExtension;
 using Server.Contracts.Abstractions.RequestAndResponse.Board;
 using Server.Contracts.Abstractions.RequestAndResponse.Card;
 using Server.Contracts.DTO.Board;
@@ -22,8 +24,8 @@ namespace Server.Application.Mappers.CardExtension
                 Id = card.Id,
                 Title = card.Title,
                 Description = card.Description,
-                Attachment = card.Attachment,
-                ColumnId = card.ColumnId,
+                Column = card.Column.ToViewColumnDTO(),
+                Attachments = card.Attachments.Select(a => a.ToViewAttachmentDTO()).ToList(),
                 Status = (Domain.Enums.CardStatus)card.Status,
                 AssignedCompletion = (Domain.Enums.AssignedCompletion)card.AssignedCompletion,
                 CreatedByUser = card.CardCreatedByUser.ToUserDTO()
