@@ -194,8 +194,11 @@ namespace Server.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("AssignedCompletion")
-                        .HasColumnType("int");
+                    b.Property<string>("AssignedCompletion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Attachment")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("AttachmentId")
                         .HasColumnType("uniqueidentifier");
@@ -205,9 +208,6 @@ namespace Server.Infrastructure.Migrations
 
                     b.Property<Guid>("ColumnId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Cover")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -222,7 +222,6 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")

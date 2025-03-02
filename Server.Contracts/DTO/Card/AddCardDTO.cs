@@ -13,6 +13,7 @@ namespace Server.Contracts.DTO.Card
         public Guid UserId { get; set; }
         public Guid ColumnId { get; set; }
         public string Title { get; set; }
+        public CardStatus? Status { get; set; }
         public AssignedCompletion? AssignedCompletion { get; set; }
 
     }

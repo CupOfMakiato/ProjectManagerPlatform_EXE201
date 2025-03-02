@@ -271,7 +271,7 @@ namespace Server.Application.Services
                     Data = null
                 };
             }
-            var openCards = await _unitOfWork.cardRepository.GetAllOpenCards();
+            var openCards = await _unitOfWork.cardRepository.GetCardsByBoardId(boardId);
 
             var mappedCards = _mapper.Map<List<ViewCardDTO>>(openCards);
 

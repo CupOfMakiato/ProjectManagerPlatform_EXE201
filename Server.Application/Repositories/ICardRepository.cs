@@ -17,6 +17,7 @@ namespace Server.Application.Repositories
         Task<Card> GetCardById(Guid id);
         Task<List<Card>> GetPagedCards(int pageIndex, int pageSize, CardStatus? status = null);
         Task<List<Card>> SearchCardsAsync(string textSearch);
+        Task<List<Card>> GetCardsByBoardId(Guid boardId);
 
         //filter
     }

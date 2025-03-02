@@ -12,8 +12,8 @@ using Server.Infrastructure.Data;
 namespace Server.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250219054429_FixAttachment")]
-    partial class FixAttachment
+    [Migration("20250302091710_fixAssignedCompletion")]
+    partial class fixAssignedCompletion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -197,8 +197,11 @@ namespace Server.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("AssignedCompletion")
-                        .HasColumnType("int");
+                    b.Property<string>("AssignedCompletion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Attachment")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("AttachmentId")
                         .HasColumnType("uniqueidentifier");
@@ -208,9 +211,6 @@ namespace Server.Infrastructure.Migrations
 
                     b.Property<Guid>("ColumnId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Cover")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -225,7 +225,6 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")

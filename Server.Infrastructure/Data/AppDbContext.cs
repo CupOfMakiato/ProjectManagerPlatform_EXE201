@@ -51,11 +51,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Board>()
             .Property(s => s.Status)
             .HasConversion(v => v.ToString(), v => (BoardStatus)Enum.Parse(typeof(BoardStatus), v));
-        //modelBuilder.Entity<Board>()
-        //    .HasOne(c => c.BoardCreatedByUser)
-        //    .WithMany()
-        //    .HasForeignKey(c => c.BoardCreatedBy)
-        //    .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+
         modelBuilder.Entity<Board>()
             .HasOne(c => c.BoardCreatedByUser)
             .WithMany()
@@ -63,11 +59,6 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
 
 
-        //modelBuilder.Entity<Column>()
-        //    .HasOne(c => c.ColumnCreatedByUser)
-        //    .WithMany()
-        //    .HasForeignKey(c => c.ColumnCreatedBy)
-        //    .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
         modelBuilder.Entity<Column>()
             .HasOne(c => c.ColumnCreatedByUser)
             .WithMany()
@@ -80,34 +71,16 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Card>()
             .Property(s => s.Status)
             .HasConversion(v => v.ToString(), v => (CardStatus)Enum.Parse(typeof(CardStatus), v));
-        //modelBuilder.Entity<Card>()
-        //    .HasOne(c => c.CardCreatedByUser)
-        //    .WithMany()
-        //    .HasForeignKey(c => c.CardCreatedBy)
-        //    .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+
+        modelBuilder.Entity<Card>()
+            .Property(s => s.AssignedCompletion)
+            .HasConversion(v => v.ToString(), v => (AssignedCompletion)Enum.Parse(typeof(AssignedCompletion), v));
+
         modelBuilder.Entity<Card>()
             .HasOne(c => c.CardCreatedByUser)
             .WithMany()
             .HasForeignKey(c => c.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
-
-        //modelBuilder.Entity<Activity>()
-        //.HasOne(a => a.Card)
-        //.WithMany()
-        //.HasForeignKey(a => a.CardId)
-        //.OnDelete(DeleteBehavior.Restrict);
-
-        //modelBuilder.Entity<Activity>()
-        //    .HasOne(a => a.Board)
-        //    .WithMany()
-        //    .HasForeignKey(a => a.BoardId)
-        //    .OnDelete(DeleteBehavior.Restrict);
-
-        //modelBuilder.Entity<Activity>()
-        //    .HasOne(a => a.Column)
-        //    .WithMany()
-        //    .HasForeignKey(a => a.ColumnId)
-        //    .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Activity>()
             .HasOne(a => a.User)

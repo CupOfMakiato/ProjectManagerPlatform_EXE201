@@ -22,7 +22,7 @@ namespace Server.Application.Mappers.CardExtension
                 Id = card.Id,
                 Title = card.Title,
                 Description = card.Description,
-                Cover = card.Cover,
+                Attachment = card.Attachment,
                 ColumnId = card.ColumnId,
                 Status = (Domain.Enums.CardStatus)card.Status,
                 AssignedCompletion = (Domain.Enums.AssignedCompletion)card.AssignedCompletion,
@@ -38,6 +38,7 @@ namespace Server.Application.Mappers.CardExtension
                 ColumnId = addCardDTO.ColumnId,
                 Title = addCardDTO.Title,
                 AssignedCompletion = addCardDTO.AssignedCompletion,
+                Status = addCardDTO.Status,
                 CreatedBy = addCardDTO.UserId
 
             };
@@ -51,6 +52,7 @@ namespace Server.Application.Mappers.CardExtension
                 UserId = addNewCardRequest.UserId,
                 ColumnId = addNewCardRequest.ColumnId,
                 Title = addNewCardRequest.Title,
+                Status = CardStatus.Open,
                 AssignedCompletion = AssignedCompletion.Incomplete,
 
             };

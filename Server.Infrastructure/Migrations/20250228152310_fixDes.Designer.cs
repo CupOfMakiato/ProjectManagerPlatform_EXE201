@@ -12,8 +12,8 @@ using Server.Infrastructure.Data;
 namespace Server.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250215182108_AddNewEntitiesAndProb")]
-    partial class AddNewEntitiesAndProb
+    [Migration("20250228152310_fixDes")]
+    partial class fixDes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,6 +84,62 @@ namespace Server.Infrastructure.Migrations
                     b.ToTable("Activities");
                 });
 
+            modelBuilder.Entity("Server.Domain.Entities.Attachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CardId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeleteBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePublicId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCover")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModificationBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModificationDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.ToTable("Attachments");
+                });
+
             modelBuilder.Entity("Server.Domain.Entities.Board", b =>
                 {
                     b.Property<Guid>("Id")
@@ -145,12 +201,13 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Attachment")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AttachmentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("AttachmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CardPosition")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("ColumnId")
                         .HasColumnType("uniqueidentifier");
@@ -168,7 +225,6 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -273,7 +329,7 @@ namespace Server.Infrastructure.Migrations
                     b.Property<Guid>("BoardId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ColumnOrder")
+                    b.Property<int>("CollumnPosition")
                         .HasColumnType("int");
 
                     b.Property<Guid?>("CreatedBy")
@@ -508,7 +564,7 @@ namespace Server.Infrastructure.Migrations
                         .HasForeignKey("BoardId");
 
                     b.HasOne("Server.Domain.Entities.Card", "Card")
-                        .WithMany("CardActivities")
+                        .WithMany("Activities")
                         .HasForeignKey("CardId");
 
                     b.HasOne("Server.Domain.Entities.Column", "Column")
@@ -528,6 +584,13 @@ namespace Server.Infrastructure.Migrations
                     b.Navigation("Column");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Server.Domain.Entities.Attachment", b =>
+                {
+                    b.HasOne("Server.Domain.Entities.Card", null)
+                        .WithMany("Attachments")
+                        .HasForeignKey("CardId");
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Board", b =>
@@ -605,7 +668,9 @@ namespace Server.Infrastructure.Migrations
 
             modelBuilder.Entity("Server.Domain.Entities.Card", b =>
                 {
-                    b.Navigation("CardActivities");
+                    b.Navigation("Activities");
+
+                    b.Navigation("Attachments");
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Category", b =>
