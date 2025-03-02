@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Contracts.DTO.Attachment
 {
-    public class AttachmentDTO
+    public class ViewAttachmentDTO
     {
         public Guid Id { get; set; }
         public Guid CardId { get; set; }

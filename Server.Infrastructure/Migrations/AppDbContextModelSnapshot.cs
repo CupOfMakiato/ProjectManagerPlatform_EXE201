@@ -87,7 +87,7 @@ namespace Server.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CardId")
+                    b.Property<Guid>("CardId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CreatedBy")
@@ -194,20 +194,14 @@ namespace Server.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("AssignedCompletion")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("AttachmentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("AssignedCompletion")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CardPosition")
                         .HasColumnType("int");
 
                     b.Property<Guid>("ColumnId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Cover")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -222,7 +216,6 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -586,9 +579,13 @@ namespace Server.Infrastructure.Migrations
 
             modelBuilder.Entity("Server.Domain.Entities.Attachment", b =>
                 {
-                    b.HasOne("Server.Domain.Entities.Card", null)
+                    b.HasOne("Server.Domain.Entities.Card", "Card")
                         .WithMany("Attachments")
-                        .HasForeignKey("CardId");
+                        .HasForeignKey("CardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Card");
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Board", b =>

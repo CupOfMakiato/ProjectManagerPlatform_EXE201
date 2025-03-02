@@ -1,4 +1,5 @@
 ﻿using Server.Contracts.DTO.Attachment;
+using Server.Contracts.DTO.Column;
 using Server.Contracts.DTO.User;
 using Server.Domain.Entities;
 using Server.Domain.Enums;
@@ -14,10 +15,10 @@ namespace Server.Contracts.DTO.Card
     public class ViewCardDTO
     {
         public Guid Id { get; set; }
-        public Guid ColumnId { get; set; }
+        public ViewColumnDTO Column { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
-        public string? Cover { get; set; }
+        public List<ViewAttachmentDTO>? Attachments { get; set; } = new List<ViewAttachmentDTO>();
         public CardStatus? Status { get; set; }
         public AssignedCompletion? AssignedCompletion { get; set; }
         public UserDTO? CreatedByUser { get; set; }

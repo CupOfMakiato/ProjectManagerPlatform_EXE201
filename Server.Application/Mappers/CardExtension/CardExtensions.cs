@@ -1,4 +1,6 @@
-﻿using Server.Application.Mappers.UserExtension;
+﻿using Server.Application.Mappers.AttachmentExtension;
+using Server.Application.Mappers.ColumsExtensions;
+using Server.Application.Mappers.UserExtension;
 using Server.Contracts.Abstractions.RequestAndResponse.Board;
 using Server.Contracts.Abstractions.RequestAndResponse.Card;
 using Server.Contracts.DTO.Board;
@@ -22,8 +24,8 @@ namespace Server.Application.Mappers.CardExtension
                 Id = card.Id,
                 Title = card.Title,
                 Description = card.Description,
-                Cover = card.Cover,
-                ColumnId = card.ColumnId,
+                Column = card.Column.ToViewColumnDTO(),
+                Attachments = card.Attachments.Select(a => a.ToViewAttachmentDTO()).ToList(),
                 Status = (Domain.Enums.CardStatus)card.Status,
                 AssignedCompletion = (Domain.Enums.AssignedCompletion)card.AssignedCompletion,
                 CreatedByUser = card.CardCreatedByUser.ToUserDTO()
@@ -38,6 +40,7 @@ namespace Server.Application.Mappers.CardExtension
                 ColumnId = addCardDTO.ColumnId,
                 Title = addCardDTO.Title,
                 AssignedCompletion = addCardDTO.AssignedCompletion,
+                Status = addCardDTO.Status,
                 CreatedBy = addCardDTO.UserId
 
             };
@@ -51,6 +54,7 @@ namespace Server.Application.Mappers.CardExtension
                 UserId = addNewCardRequest.UserId,
                 ColumnId = addNewCardRequest.ColumnId,
                 Title = addNewCardRequest.Title,
+                Status = CardStatus.Open,
                 AssignedCompletion = AssignedCompletion.Incomplete,
 
             };
