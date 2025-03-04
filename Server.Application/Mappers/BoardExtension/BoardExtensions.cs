@@ -36,7 +36,7 @@ namespace Server.Application.Mappers.BoardExtension
                 Description = addBoardDTO.Description,
                 //ThumbNail = board.ThumbNail, //add later
                 Type = addBoardDTO.Type,
-                Status = addBoardDTO.Status,
+                //Status = addBoardDTO.Status, //always Open when added
                 //BoardCreatedBy = addBoardDTO.UserId,
                 CreatedBy = addBoardDTO.UserId,
 
@@ -51,7 +51,7 @@ namespace Server.Application.Mappers.BoardExtension
                 Title = addNewBoardRequest.Title,
                 Description = addNewBoardRequest.Description,
                 //ThumbNail = board.ThumbNail, //add later
-                Type = addNewBoardRequest.Type,
+                Type = addNewBoardRequest.Type, 
                 Status = BoardStatus.Open,
 
             };
