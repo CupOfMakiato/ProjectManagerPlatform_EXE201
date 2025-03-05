@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Application.Interfaces;
@@ -75,6 +76,67 @@ namespace Server.API.Controllers
 
             var cardMapper = req.ToAddCardDTO();
             var result = await _cardService.AddANewCard(cardMapper);
+
+            return Ok(result);
+        }
+
+        [HttpPut("UpdateCard")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> UpdateCard([FromForm] UpdateCardRequest req)
+        {
+            var validator = new UpdateCardRequestValidator();
+            var validatorResult = validator.Validate(req);
+            if (!validatorResult.IsValid)
+            {
+                return BadRequest(new Result<object>
+                {
+                    Error = 1,
+                    Message = "Invalid input!",
+                    Data = validatorResult.Errors.Select(x => x.ErrorMessage),
+                });
+            }
+
+            var cardMapper = req.ToUpdateCardDTO();
+
+            var result = await _cardService.UpdateCard(cardMapper);
+
+            return Ok(result);
+        }
+
+        [HttpPut("ChangeCardName")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ChangeCardName([FromForm] ChangeCardNameRequest req)
+        {
+            var validator = new ChangeCardNameRequestValidator();
+            var validatorResult = validator.Validate(req);
+            if (!validatorResult.IsValid)
+            {
+                return BadRequest(new Result<object>
+                {
+                    Error = 1,
+                    Message = "Invalid input!",
+                    Data = validatorResult.Errors.Select(x => x.ErrorMessage),
+                });
+            }
+
+            var cardMapper = req.ToChangeCardNameDTO();
+
+            var result = await _cardService.ChangeCardName(cardMapper);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("DeleteCard/{cardId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> DeleteCard(Guid cardId)
+        {
+            var result = await _cardService.DeleteCard(cardId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             return Ok(result);
         }

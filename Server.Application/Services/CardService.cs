@@ -92,6 +92,89 @@ namespace Server.Application.Services
             };
         }
 
+        public async Task<Result<object>> UpdateCard(UpdateCardDTO updateCardDTO)
+        {
+            var card = await _unitOfWork.cardRepository.GetCardById(updateCardDTO.Id);
+            if (card == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Card not found",
+                    Data = null
+                };
+            }
+
+            card.Title = updateCardDTO.Title;
+            card.Description = updateCardDTO.Description;
+            card.Status = updateCardDTO.Status;
+            card.AssignedCompletion = updateCardDTO.AssignedCompletion;
+
+            _unitOfWork.cardRepository.Update(card);
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0 ? "Update card successfully" : "Update card failed",
+                Data = null
+            };
+        }
+
+        public async Task<Result<object>> ChangeCardName(ChangeCardNameDTO changeCardNameDTO)
+        {
+            var card = await _unitOfWork.cardRepository.GetCardById(changeCardNameDTO.Id);
+            if (card == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Card not found",
+                    Data = null
+                };
+            }
+
+            card.Title = changeCardNameDTO.Title;
+
+            _unitOfWork.cardRepository.Update(card);
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0 ? "Change Card Name successfully" : "Change card name failed",
+                Data = null
+            };
+        }
+
+        public async Task<Result<object>> DeleteCard(Guid cardId)
+        {
+            // Retrieve the existing card
+            var existingCard = await _unitOfWork.cardRepository.GetCardById(cardId);
+            if (existingCard == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Card not found",
+                    Data = null
+                };
+            }
+
+            // Soft delete the card
+            _unitOfWork.cardRepository.SoftRemove(existingCard);
+
+            // Save the changes
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0 ? "Card deleted successfully" : "Failed to delete Card",
+                Data = null
+            };
+        }
+
         public async Task<Result<object>> UploadFileAttachment(Guid cardId, IFormFile file)
         {
             // Validate file input

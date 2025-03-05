@@ -9,6 +9,6 @@ namespace Server.Domain.Enums
     public enum CardStatus
     {
         Closed = 1,
-        Open = 0
+        Open = 2
     }
 }

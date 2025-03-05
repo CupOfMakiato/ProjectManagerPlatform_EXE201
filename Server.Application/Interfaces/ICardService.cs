@@ -14,6 +14,9 @@ namespace Server.Application.Interfaces
         Task<Result<object>> ViewAllCards();
         Task<Result<object>> ViewCardById(Guid cardId);
         Task<Result<object>> AddANewCard(AddCardDTO addCardDTO);
+        Task<Result<object>> UpdateCard(UpdateCardDTO updateCardDTO);
+        Task<Result<object>> ChangeCardName(ChangeCardNameDTO changeCardNameDTO);
+        Task<Result<object>> DeleteCard(Guid cardId);
         Task<Result<object>> UploadFileAttachment(Guid cardId, IFormFile file);
     }
 }

@@ -60,6 +60,26 @@ namespace Server.Application.Mappers.CardExtension
             };
         }
 
+        public static UpdateCardDTO ToUpdateCardDTO(this UpdateCardRequest updateCardRequest)
+        {
+            return new UpdateCardDTO
+            {
+                Id = (Guid)updateCardRequest.Id,
+                Title = updateCardRequest.Title,
+                Description = updateCardRequest.Description,
+                Status = updateCardRequest.Status,
+                AssignedCompletion = updateCardRequest.AssignedCompletion,
+            };
+        }
+
+        public static ChangeCardNameDTO ToChangeCardNameDTO(this ChangeCardNameRequest changeCardNameRequest)
+        {
+            return new ChangeCardNameDTO
+            {
+                Id = (Guid)changeCardNameRequest.Id,
+                Title = changeCardNameRequest.Title,
+            };
+        }
 
     }
 }
