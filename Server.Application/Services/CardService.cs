@@ -6,6 +6,7 @@ using Server.Application.Interfaces;
 using Server.Application.Mappers.BoardExtension;
 using Server.Application.Mappers.CardExtension;
 using Server.Application.Repositories;
+using Server.Contracts.Abstractions.CloudinaryService;
 using Server.Contracts.Abstractions.Shared;
 using Server.Contracts.DTO.Board;
 using Server.Contracts.DTO.Card;
@@ -88,6 +89,64 @@ namespace Server.Application.Services
                 Error = result > 0 ? 0 : 1,
                 Message = result > 0 ? "Add new card successfully" : "Add new card fail",
                 Data = null
+            };
+        }
+
+        public async Task<Result<object>> UploadFileAttachment(Guid cardId, IFormFile file)
+        {
+            // Validate file input
+            if (file == null || file.Length == 0)
+            {
+                return new Result<object> { Error = 1, Message = "File is empty?" };
+            }
+
+            // Fetch the card
+            var card = await _cardRepository.GetCardById(cardId);
+            if (card == null)
+            {
+                return new Result<object> { Error = 1, Message = "Card not found" };
+            }
+
+            // Extract file details
+            string fileName = file.FileName;
+            string fileExtension = Path.GetExtension(file.FileName).ToLower();
+            bool isImage = fileExtension == ".png" || fileExtension == ".jpeg" || fileExtension == ".jpg" || fileExtension == ".gif";
+
+            // Upload to Cloudinary
+            CloudinaryResponse uploadResult = isImage
+                ? await _cloudinaryService.UploadCardImage(fileName, file, card)
+                : await _cloudinaryService.UploadCardFile(fileName, file, card);
+
+            if (uploadResult == null)
+            {
+                return new Result<object> { Error = 1, Message = "Something went wrong, file upload failed!" };
+            }
+
+            // Determine if this should be the cover
+            bool shouldBeCover = isImage && !card.Attachments.Any(a => a.IsCover);
+
+            // Create attachment
+            var attachment = new Attachment
+            {
+                FileName = fileName,
+                FileUrl = uploadResult.FileUrl ?? "",
+                FileType = file.ContentType,
+                FilePublicId = uploadResult.PublicFileId ?? "",
+                CreationDate = DateTime.Now,
+                IsCover = shouldBeCover,
+                CardId = card.Id
+            };
+
+            // Add attachment and save changes
+            card.Attachments.Add(attachment);
+            _cardRepository.Update(card);
+            await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = 0,
+                Message = "File uploaded successfully",
+                Data = attachment
             };
         }
 

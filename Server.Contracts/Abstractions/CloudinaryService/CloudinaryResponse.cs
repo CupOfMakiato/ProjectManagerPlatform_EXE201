@@ -8,8 +8,8 @@ namespace Server.Contracts.Abstractions.CloudinaryService
 {
     public class CloudinaryResponse
     {
-        public string? ImageUrl { get; set; }
-        public string? PublicImageId { get; set; }
-        public string? PublicVideoId { get; set; }
+        public string? FileUrl { get; set; }
+        public string? PublicFileId { get; set; }
+        public bool IsCover { get; set; } = false;
     }
 }
