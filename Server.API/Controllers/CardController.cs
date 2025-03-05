@@ -5,6 +5,7 @@ using Server.Application.Interfaces;
 using Server.Application.Mappers.CardExtension;
 using Server.Application.Services;
 using Server.Application.Validations.BoardValidations;
+using Server.Application.Validations.CardValidate;
 using Server.Application.Validations.CardValidations;
 using Server.Contracts.Abstractions.RequestAndResponse.Board;
 using Server.Contracts.Abstractions.RequestAndResponse.Card;
@@ -77,5 +78,46 @@ namespace Server.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("UploadFileAttachment/{cardId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> UploadFileAttachment(Guid cardId, [FromForm] UploadFileAttachmentRequest request)
+        {
+            var validator = new UploadFileAttachmentRequestValidator();
+            var validationResult = validator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new Result<object>
+                {
+                    Error = 1,
+                    Message = "File validation failed!",
+                    Data = validationResult.Errors.Select(x => x.ErrorMessage)
+                });
+            }
+
+            var result = await _cardService.UploadFileAttachment(cardId, request.File);
+
+            if (result == null)
+            {
+                return StatusCode(500, new Result<object>
+                {
+                    Error = 1,
+                    Message = "Something went wrong, file upload failed!"
+                });
+            }
+
+            if (result.Error == 1)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+
+
+
     }
 }

@@ -58,6 +58,15 @@ builder.Services.AddCors(options =>
         });
 });
 
+// Kestrel File Upload Size
+
+//var maxFileSize = builder.Configuration.GetValue<long>("Kestrel:Limits:MaxRequestBodySize");
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    options.Limits.MaxRequestBodySize = maxFileSize;
+//});
+
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
