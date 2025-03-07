@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Server.API;
+using Server.API.Middlewares;
 using Server.Application;
 using Server.Infrastructure;
 using System.Diagnostics;
@@ -89,6 +90,7 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+app.UseSwagger();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -110,9 +112,17 @@ app.UseExceptionHandler("/Error");
 
 app.UseCors("AllowAllOrigins");
 
-app.UseSwagger();
+
+// Use Global Exception Middleware 
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+// Middleware for performance tracking
+app.UseMiddleware<PerformanceMiddleware>();
+
+
 app.UseHttpsRedirection();
 
+// use authen
 app.UseAuthentication();
 app.UseAuthorization();
 

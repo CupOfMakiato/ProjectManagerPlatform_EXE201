@@ -11,7 +11,7 @@
             catch (Exception ex)
             {
                 // todo push notification & writing log
-                Console.WriteLine("GobalExceptionMiddleware");
+                Console.WriteLine("GlobalExceptionMiddleware");
                 Console.WriteLine(ex.Message);
                 await context.Response.WriteAsync(ex.ToString());
             }
