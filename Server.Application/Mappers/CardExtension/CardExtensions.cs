@@ -81,5 +81,34 @@ namespace Server.Application.Mappers.CardExtension
             };
         }
 
+        public static EditCardDescriptionDTO ToEditCardDescriptionDTO(this EditCardDescriptionRequest editCardDescriptionRequest)
+        {
+            return new EditCardDescriptionDTO
+            {
+                Id = (Guid)editCardDescriptionRequest.Id,
+                Description = editCardDescriptionRequest.Description,
+            };
+        }
+
+        public static MoveCardInColumnDTO ToMoveCardInColumnDTO(this MoveCardInColumnRequest moveCardInColumnRequest)
+        {
+            return new MoveCardInColumnDTO
+            {
+                Id = (Guid)moveCardInColumnRequest.Id,
+                ColumnId = moveCardInColumnRequest.ColumnId,
+                NewPosition = moveCardInColumnRequest.NewPosition,
+            };
+        }
+
+        public static MoveCardToColumnDTO ToMoveCardToColumnDTO(this MoveCardToColumnRequest moveCardToListRequest)
+        {
+            return new MoveCardToColumnDTO
+            {
+                Id = (Guid)moveCardToListRequest.Id,
+                NewColumnId = moveCardToListRequest.NewColumnId,
+                NewPosition = moveCardToListRequest.NewPosition,
+            };
+        }
+
     }
 }
