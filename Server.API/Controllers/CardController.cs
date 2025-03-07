@@ -314,8 +314,45 @@ namespace Server.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("DownloadAttachment")]
+        [ProducesResponseType(200, Type = typeof(Result<DownloadAttachmentDTO>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> DownloadAttachment([FromQuery] DownloadAttachmentRequest request)
+        {
+            var validator = new DownloadAttachmentRequestValidator();
+            var validationResult = validator.Validate(request);
 
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new Result<object>
+                {
+                    Error = 1,
+                    Message = "Invalid input!",
+                    Data = validationResult.Errors.Select(x => x.ErrorMessage)
+                });
+            }
 
+            var result = await _cardService.DownloadAttachment(request.cardId, request.attachmentId);
+
+            if (result.Error == 1)
+            {
+                return BadRequest(result);
+            }
+
+            var fileData = result.Data as DownloadAttachmentDTO;
+            if (fileData == null || string.IsNullOrEmpty(fileData.FileUrl))
+            {
+                return BadRequest(new Result<object>
+                {
+                    Error = 1,
+                    Message = "File URL not found!"
+                });
+            }
+
+            return Ok(fileData);
+        }
+
+        
 
     }
 }

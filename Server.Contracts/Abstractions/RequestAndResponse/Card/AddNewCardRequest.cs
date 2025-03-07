@@ -13,6 +13,6 @@ namespace Server.Contracts.Abstractions.RequestAndResponse.Card
         public Guid UserId { get; set; }
         public Guid ColumnId { get; set; }
         public string Title { get; set; }
-        public AssignedCompletion AssignedCompletion { get; set; }
+        //public AssignedCompletion AssignedCompletion { get; set; }
     }
 }

@@ -571,6 +571,29 @@ namespace Server.Application.Services
             };
         }
 
+        public async Task<Result<object>> DownloadAttachment(Guid cardId, Guid attachmentId)
+        {
+            // fetch card
+            var card = await _cardRepository.GetCardById(cardId);
+            if (card == null)
+            {
+                return new Result<object> { Error = 1, Message = "Card not found!" };
+            }
+
+            // choose attachment
+            var attachment = card.Attachments.FirstOrDefault(a => a.Id == attachmentId);
+            if (attachment == null)
+            {
+                return new Result<object> { Error = 1, Message = "File not found!" };
+            }
+
+            return new Result<object>
+            {
+                Error = 0,
+                Message = "File retrieved successfully",
+                Data = attachment.ToDownloadAttachmentDTO()
+            };
+        }
 
 
     }

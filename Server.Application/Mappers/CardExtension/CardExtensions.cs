@@ -110,5 +110,14 @@ namespace Server.Application.Mappers.CardExtension
             };
         }
 
+        public static DownloadAttachmentDTO ToDownloadAttachmentDTO(this Attachment attachment)
+        {
+            return new DownloadAttachmentDTO
+            {
+                FileName = attachment.FileName,
+                FileUrl = attachment.FileUrl
+            };
+        }
+
     }
 }

@@ -39,5 +39,8 @@ namespace Server.Application.Interfaces
         // Move cards
         Task<Result<object>> MoveCardInColumn(MoveCardInColumnDTO moveCardInColumnDTO);
         Task<Result<object>> MoveCardToList(MoveCardToColumnDTO moveCardToListDTO);
+
+        // Download file
+        Task<Result<object>> DownloadAttachment(Guid cardId, Guid fileId);
     }
 }

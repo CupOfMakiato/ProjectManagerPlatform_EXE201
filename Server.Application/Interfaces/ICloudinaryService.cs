@@ -17,5 +17,6 @@ namespace Server.Application.Interfaces
         Task<CloudinaryResponse> UploadCardFile(string fileName, IFormFile file, Card card);
         Task<CloudinaryResponse> UploadBoardImage(string fileName, IFormFile file, Board board);
         Task<DeletionResult> DeleteFileAsync(string publicId);
+        Task<string> GetFileUrlAsync(string publicId);
     }
 }
