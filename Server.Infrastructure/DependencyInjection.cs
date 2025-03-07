@@ -36,7 +36,6 @@ namespace Server.Infrastructure
             services.AddScoped<IColumnsService, ColumnService>();
             services.AddScoped<IAttachmentService, AttachmentService>();
             services.AddScoped<PasswordService>();
-            services.AddScoped<RedisService>();
             services.AddScoped<OtpService>();
             services.AddScoped<EmailService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();

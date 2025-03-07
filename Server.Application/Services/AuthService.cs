@@ -25,10 +25,9 @@ namespace Server.Application.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
-        private readonly RedisService _redisService;
         private readonly IOtpService _otpService;
 
-        public AuthService(IAuthRepository authRepository, TokenGenerators tokenGenerators, IUserRepository userRepository, IHttpContextAccessor httpContextAccessor, IEmailService emailService, IConfiguration configuration, RedisService redisService, IOtpService otpService, IMapper mapper)
+        public AuthService(IAuthRepository authRepository, TokenGenerators tokenGenerators, IUserRepository userRepository, IHttpContextAccessor httpContextAccessor, IEmailService emailService, IConfiguration configuration, IOtpService otpService, IMapper mapper)
         {
             _authRepository = authRepository;
             _tokenGenerators = tokenGenerators;
@@ -36,7 +35,6 @@ namespace Server.Application.Services
             _httpContextAccessor = httpContextAccessor;
             _emailService = emailService;
             _configuration = configuration;
-            _redisService = redisService;
             _otpService = otpService;
             _mapper = mapper;
         }
