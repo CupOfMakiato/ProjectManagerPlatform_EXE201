@@ -10,7 +10,7 @@ namespace Server.Application.Validations.CardValidate
     {
         private readonly long _maxFileSize = 5 * 1024 * 1024; // 5MB
         private readonly string[] _allowedExtensions = 
-            { ".jpg", ".jpeg", ".png", ".gif", ".pdf",
+            { ".jpg", ".jpeg", ".png", ".gif", ".webp", ".pdf",
             ".docx", ".doc", ".pptx", ".ppt", ".pdf",
             ".xlsx", ".ods", ".pptx", ".txt", ".rar", ".zip", ".7z",
             ".ogg", ".wav", ".mp3"};

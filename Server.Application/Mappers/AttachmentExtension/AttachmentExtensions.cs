@@ -1,4 +1,5 @@
-﻿using Server.Contracts.DTO.Attachment;
+﻿using Server.Contracts.Abstractions.RequestAndResponse.Attachment;
+using Server.Contracts.DTO.Attachment;
 using Server.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,14 @@ namespace Server.Application.Mappers.AttachmentExtension
                 FileUrl = attachment.FileUrl,
                 FileType = attachment.FileType,
                 IsCover = attachment.IsCover,
+            };
+        }
+        public static ChangeAttachmentNameDTO ToChangeAttachmentNameDTO(this ChangeAttachmentNameRequest changeAttachmentNameRequest)
+        {
+            return new ChangeAttachmentNameDTO
+            {
+                Id = changeAttachmentNameRequest.attachmentId,
+                FileName = changeAttachmentNameRequest.FileName,
             };
         }
     }
