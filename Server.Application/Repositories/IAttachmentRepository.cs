@@ -13,5 +13,6 @@ namespace Server.Application.Repositories
         Task<List<Attachment>> GetAttachmentsByCardId(Guid cardId);
         Task<Attachment> GetAttachmentById(Guid id);
         Task<int> GetTotalAttachmentCount();
+        Task<Attachment> GetCoverByCardId(Guid cardId);
     }
 }

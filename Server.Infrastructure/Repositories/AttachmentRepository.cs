@@ -45,5 +45,12 @@ namespace Server.Infrastructure.Repositories
             return await _dbContext.Attachments.Where(a => !a.IsDeleted).CountAsync();
         }
 
+        public async Task<Attachment> GetCoverByCardId(Guid cardId)
+        {
+            return await _dbContext.Attachments
+                .FirstOrDefaultAsync(a => a.CardId == cardId && a.IsCover);
+        }
+
+
     }
 }

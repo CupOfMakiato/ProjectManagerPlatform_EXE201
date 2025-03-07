@@ -46,5 +46,35 @@ namespace Server.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut("MakeCover/{attachmentId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> MakeCover(Guid attachmentId)
+        {
+            var result = await _attachmentService.MakeCover(attachmentId);
+
+            if (result.Error == 1)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPut("RemoveCover/{attachmentId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> RemoveCover(Guid attachmentId)
+        {
+            var result = await _attachmentService.RemoveCover(attachmentId);
+
+            if (result.Error == 1)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
     }
 }
