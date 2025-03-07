@@ -344,7 +344,11 @@ namespace Server.Application.Services
             // Extract file details
             string fileName = file.FileName;
             string fileExtension = Path.GetExtension(file.FileName).ToLower();
-            bool isImage = fileExtension == ".png" || fileExtension == ".jpeg" || fileExtension == ".jpg" || fileExtension == ".gif";
+            bool isImage = fileExtension == ".png" 
+                || fileExtension == ".jpeg" 
+                || fileExtension == ".jpg" 
+                || fileExtension == ".gif"
+                || fileExtension == ".webp";
 
             // Upload to Cloudinary
             CloudinaryResponse uploadResult = isImage
@@ -595,6 +599,9 @@ namespace Server.Application.Services
             };
         }
 
+
+
+        
 
     }
 }

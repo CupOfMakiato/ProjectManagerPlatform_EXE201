@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.RateLimiting;
 using Server.API;
 using Server.Application;
 using Server.Infrastructure;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,17 @@ var builder = WebApplication.CreateBuilder(args);
         .AddApplication()
         .AddInfrastructure(builder.Configuration);
 }
+
+// Add Rate Limiting
+//builder.Services.AddRateLimiter(options =>
+//{
+//    options.AddFixedWindowLimiter("fixed", limiterOptions =>
+//    {
+//        limiterOptions.Window = TimeSpan.FromSeconds(10);  // 10-sec time window
+//        limiterOptions.PermitLimit = 5;  // Allow max 5 requests per window
+//        limiterOptions.QueueLimit = 2;   // Queue up to 2 extra requests
+//    });
+//});
 
 // Configure JWT authentication
 var key = System.Text.Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]);
@@ -72,6 +85,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+
 
 var app = builder.Build();
 

@@ -37,6 +37,14 @@ namespace Server.Infrastructure.Repositories
             return await query.CountAsync();
         }
 
+        public async Task<int> CountAttachmentsInACard(Guid cardId)
+        {
+            return await _dbContext.Attachments
+                .Where(a => a.CardId == cardId)
+                .CountAsync();
+        }
+
+
         public async Task<List<Card>> GetAllCards()
         {
             return await _dbContext.Cards

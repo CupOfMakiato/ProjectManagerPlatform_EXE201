@@ -1,6 +1,8 @@
-﻿using Server.API.Services;
+﻿using Server.API.Middlewares;
+using Server.API.Services;
 using Server.Application.Interfaces;
 using Server.Domain.Enums;
+using System.Diagnostics;
 
 namespace Server.API
 {
@@ -22,8 +24,9 @@ namespace Server.API
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddScoped<IClaimsService, ClaimsService>();
-            //services.AddSingleton<GlobalExceptionMiddleware>();
-            //services.AddSingleton<PerformanceMiddleware>();
+            services.AddScoped<GlobalExceptionMiddleware>();
+            services.AddScoped<Stopwatch>();
+            services.AddScoped<PerformanceMiddleware>();
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
             services.AddSwaggerGen(c =>

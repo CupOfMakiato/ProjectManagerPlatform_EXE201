@@ -11,6 +11,7 @@ namespace Server.Application.Repositories
     public interface ICardRepository : IGenericRepository<Card>
     {
         Task<int> GetTotalCardCount(CardStatus? status = null);
+        Task<int> CountAttachmentsInACard(Guid cardId);
         Task<List<Card>> GetAllCards();
         Task<List<Card>> GetAllOpenCards();
         Task<List<Card>> GetAllArchivedCards();
