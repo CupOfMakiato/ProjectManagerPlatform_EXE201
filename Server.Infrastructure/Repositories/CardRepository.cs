@@ -92,6 +92,38 @@ namespace Server.Infrastructure.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted); 
         }
 
+        public async Task<List<Card>> GetCardsByColumnId(Guid columnId)
+        {
+            return await _dbContext.Cards
+                .Include(c => c.Column) // Include the column to ensure relational integrity
+                .Include(c => c.Attachments) // Include attachments if needed
+                .Where(c => !c.IsDeleted && c.ColumnId == columnId) // Filter by columnId and exclude deleted cards
+                .OrderBy(c => c.CardPosition) // Order by position within the column
+                .ToListAsync();
+        }
+
+        public async Task<List<Card>> GetOpenCardsByColumnId(Guid columnId)
+        {
+            return await _dbContext.Cards
+                .Include(c => c.Column) // Include the column to ensure relational integrity
+                .Include(c => c.Attachments) // Include attachments if needed
+                .Where(c => !c.IsDeleted && c.ColumnId == columnId) // Filter by columnId and exclude deleted cards
+                .Where(c => c.Status == CardStatus.Open)
+                .OrderBy(c => c.CardPosition) // Order by position within the column
+                .ToListAsync();
+        }
+        public async Task<List<Card>> GetArchivedCardsByColumnId(Guid columnId)
+        {
+            return await _dbContext.Cards
+                .Include(c => c.Column) // Include the column to ensure relational integrity
+                .Include(c => c.Attachments) // Include attachments if needed
+                .Where(c => !c.IsDeleted && c.ColumnId == columnId) // Filter by columnId and exclude deleted cards
+                .Where(c => c.Status == CardStatus.Closed)
+                .OrderBy(c => c.CardPosition) // Order by position within the column
+                .ToListAsync();
+        }
+
+
         public async Task<List<Card>> GetPagedCards(int pageIndex, int pageSize, CardStatus? status = null)
         {
             var query = _dbContext.Cards
