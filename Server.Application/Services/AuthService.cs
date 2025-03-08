@@ -26,8 +26,12 @@ namespace Server.Application.Services
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
         private readonly IOtpService _otpService;
+        private readonly IRedisService _redisService;
 
-        public AuthService(IAuthRepository authRepository, TokenGenerators tokenGenerators, IUserRepository userRepository, IHttpContextAccessor httpContextAccessor, IEmailService emailService, IConfiguration configuration, IOtpService otpService, IMapper mapper)
+        public AuthService(IAuthRepository authRepository, TokenGenerators tokenGenerators,
+            IUserRepository userRepository, IHttpContextAccessor httpContextAccessor,
+            IEmailService emailService, IConfiguration configuration, IOtpService otpService,
+            IMapper mapper, IRedisService redisService)
         {
             _authRepository = authRepository;
             _tokenGenerators = tokenGenerators;
@@ -37,13 +41,29 @@ namespace Server.Application.Services
             _configuration = configuration;
             _otpService = otpService;
             _mapper = mapper;
+            _redisService = redisService;
         }
 
         public async Task<Authenticator> LoginAsync(LoginDTO loginDTO)
         {
             try
             {
-                var user = await _userRepository.GetUserByEmail(loginDTO.Email);
+                string cacheKey = $"user_{loginDTO.Email}";
+
+                // Try to get user from Redis cache
+                var user = await _redisService.GetAsync<User>(cacheKey);
+
+                if (user == null)
+                {
+                    // Fetch user from database if not cached
+                    user = await _userRepository.GetUserByEmail(loginDTO.Email);
+
+                    if (user != null)
+                    {
+                        // Store user data in Redis for 30 minutes
+                        await _redisService.SetAsync(cacheKey, user, TimeSpan.FromMinutes(30));
+                    }
+                }
 
                 if (user == null)
                 {
@@ -54,9 +74,9 @@ namespace Server.Application.Services
                 {
                     throw new InvalidOperationException("Account is not activated. Please verify your email.");
                 }
-                if(user.Status.ToString() != "Active")
+                if (user.Status.ToString() != "Active")
                 {
-                    throw new InvalidOperationException("Your account has been lock. Contact to website to solve it.");
+                    throw new InvalidOperationException("Your account has been locked. Contact support.");
                 }
                 if (!BCrypt.Net.BCrypt.Verify(loginDTO.PasswordHash, user.PasswordHash))
                 {
@@ -65,29 +85,30 @@ namespace Server.Application.Services
 
                 // Generate JWT token
                 var token = await GenerateJwtToken(user);
+
                 return token;
             }
             catch (KeyNotFoundException ex)
             {
-                // Handle cases where the user is not found
-                throw new ApplicationException("Invalid email or account does not exist.", ex);
+                Console.WriteLine($"[ERROR] {ex.Message}");
+                throw;
             }
             catch (InvalidOperationException ex)
             {
-                // Handle cases where the account is not verified
-                throw new ApplicationException("Account is not activated. Please verify your email.", ex);
+                Console.WriteLine($"[ERROR] {ex.Message}");
+                throw;
             }
             catch (UnauthorizedAccessException ex)
             {
-                // Handle cases where the password is invalid
-                throw new ApplicationException("Invalid password.", ex);
+                Console.WriteLine($"[ERROR] {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
-                // General exception handling
                 throw new ApplicationException("An error occurred during login.", ex);
             }
         }
+
 
         //Register User Account
         public async Task RegisterUserAsync(UserRegistrationDTO userRegistrationDto)

@@ -18,11 +18,14 @@ namespace Server.Application.Services
         private readonly IEmailService _emailService;
         private readonly TokenGenerators _tokenGenerators;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        //private readonly RedisService _redisService;
+        private readonly IRedisService _redisService;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IClaimsService _claimsService;
 
-        public UserService(IUserRepository userRepository, IConfiguration configuration, IAuthRepository authRepository, IEmailService emailService, TokenGenerators tokenGenerators, IHttpContextAccessor httpContextAccessor, ICategoryRepository categoryRepository, IClaimsService claimsService)
+        public UserService(IUserRepository userRepository, IConfiguration configuration,
+            IAuthRepository authRepository, IEmailService emailService, IRedisService redisService,
+            TokenGenerators tokenGenerators, IHttpContextAccessor httpContextAccessor,
+            ICategoryRepository categoryRepository, IClaimsService claimsService)
         {
             _userRepository = userRepository;
             _configuration = configuration;
@@ -30,7 +33,7 @@ namespace Server.Application.Services
             _emailService = emailService;
             _tokenGenerators = tokenGenerators;
             _httpContextAccessor = httpContextAccessor;
-            //_redisService = redisService;
+            _redisService = redisService;
             _categoryRepository = categoryRepository;
             _claimsService = claimsService;
         }

@@ -18,6 +18,9 @@ var builder = WebApplication.CreateBuilder(args);
         .AddInfrastructure(builder.Configuration);
 }
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 // Add Rate Limiting
 //builder.Services.AddRateLimiter(options =>
 //{
@@ -113,8 +116,7 @@ app.UseExceptionHandler("/Error");
 app.UseCors("AllowAllOrigins");
 
 
-// Use Global Exception Middleware 
-app.UseMiddleware<GlobalExceptionMiddleware>();
+
 
 // Middleware for performance tracking
 app.UseMiddleware<PerformanceMiddleware>();
@@ -126,6 +128,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Use Global Exception Middleware 
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.MapControllers();
 
 app.Run();
