@@ -1,4 +1,5 @@
-﻿using Server.Contracts.DTO.Auth;
+﻿using Google.Apis.Auth;
+using Server.Contracts.DTO.Auth;
 using Server.Contracts.DTO.User;
 using Server.Domain.Entities;
 
@@ -12,10 +13,15 @@ namespace Server.Application.Interfaces
         Task<Authenticator> RefreshToken(string token);
         Task<bool> DeleteRefreshToken(Guid userId);
 
+        //LOGIN GOOGLE
+        Task<Authenticator> AuthenticateGoogleUserAsync(GoogleUserRequest request);
+
         //REGISTER
         Task RegisterUserAsync(UserRegistrationDTO userRegistrationDto);
         Task<User> GetByVerificationToken(string token);
         Task<bool> VerifyOtpAsync(string email, string otp);
+
+        
 
         //REGISTER Shop
         //Task RegisterShopAsync(ShopRegisterDTO shopRegisterDTO);

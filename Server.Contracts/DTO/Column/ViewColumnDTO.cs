@@ -14,6 +14,7 @@ namespace Server.Contracts.DTO.Column
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
+        public int CollumnPosition { get; set; }
         public ViewBoardDTO? Board { get; set; }
         public UserDTO? CreatedByUser { get; set; }
         public DateTime CreationDate { get; set; }

@@ -12,6 +12,7 @@ namespace Server.Application.Interfaces
         Task<User> GetByEmail(string email);
         Task UpdateUserAsync(User user);
 
+
         Task<UserDTO> GetUserById(Guid id);
         Task<Result<User>> GetCurrentUserById();
     }

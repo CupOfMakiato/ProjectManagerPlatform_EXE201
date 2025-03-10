@@ -51,6 +51,19 @@ namespace Server.API.Controllers
 
             return Ok(column);
         }
+        
+        [HttpGet("ViewColumsByBoardId/{boardId}")]
+        [ProducesResponseType(200, Type = typeof(ViewColumnDTO))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ViewColumnByBoardId(Guid boardId)
+        {
+            var columns = await _columnsService.ViewColumnsByBoardId(boardId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(columns);
+        }
 
         [HttpPost("AddNewColumn")]
         [ProducesResponseType(200, Type = typeof(Result<object>))]
@@ -79,6 +92,19 @@ namespace Server.API.Controllers
         public async Task<IActionResult> DeleteColums(Guid columnId)
         {
             var result = await _columnsService.DeleteColumn(columnId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(result);
+        }
+
+        [HttpPut("MoveColum")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> MoveColumn([FromForm]MoveColumnDTO moveColumnDTO)
+        {
+            var result = await _columnsService.MoveColumnInBoard(moveColumnDTO);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

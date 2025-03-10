@@ -1,11 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Google.Apis.Auth;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.Application.Interfaces;
 using Server.Contracts.Abstractions.Shared;
 using Server.Contracts.DTO.Auth;
 using Server.Contracts.DTO.User;
+using Server.Domain.Entities;
 using Server.Domain.Enums;
 using System.Security.Claims;
+using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace Server.API.Controllers
 {
@@ -17,13 +24,15 @@ namespace Server.API.Controllers
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
+        private readonly HttpClient _httpClient;
 
-        public AuthController(PasswordService passwordService, IAuthService authService, IUserService userService, IEmailService emailService)
+        public AuthController(PasswordService passwordService, IAuthService authService, IUserService userService, IEmailService emailService, HttpClient httpClient)
         {
             _passwordService = passwordService;
             _authService = authService;
             _userService = userService;
             _emailService = emailService;
+            _httpClient = httpClient;
         }
 
         [HttpPost("user/login")]
@@ -55,6 +64,38 @@ namespace Server.API.Controllers
                 return BadRequest(new { ex.Message });
             }
         }
+
+        [HttpGet("login")]
+        public IActionResult Login()
+        {
+            // Chuyển hướng đến Google để xác thực
+            var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> LoginWithGoogle([FromBody] GoogleUserRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.IdToken))
+            {
+                return BadRequest("Invalid request data.");
+            }
+
+            try
+            {
+                var result = await _authService.AuthenticateGoogleUserAsync(request);
+                return Ok(result);
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An internal error occurred.");
+            }
+        }    
 
         [HttpPost("token/refresh")]
         public async Task<IActionResult> RefreshToken(string token)
