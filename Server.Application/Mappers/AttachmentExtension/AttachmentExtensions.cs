@@ -17,6 +17,8 @@ namespace Server.Application.Mappers.AttachmentExtension
                 Id = attachment.Id,
                 FileName = attachment.FileName,
                 FileUrl = attachment.FileUrl,
+                FileType = attachment.FileType,
+                IsCover = attachment.IsCover,
             };
         }
     }

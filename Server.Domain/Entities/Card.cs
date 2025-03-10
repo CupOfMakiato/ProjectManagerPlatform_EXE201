@@ -24,5 +24,10 @@ namespace Server.Domain.Entities
         // List of attachments
         public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
         public User CardCreatedByUser { get; set; }
+
+        /*
+         * StartDate
+         * EndDate
+        */
     }
 }
