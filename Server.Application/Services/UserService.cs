@@ -85,5 +85,6 @@ namespace Server.Application.Services
             var user = await _userRepository.GetByIdAsync(userId);
             return new Result<User>() { Error = 1, Message = "Invalid token", Data = user };
         }
+
     }
 }

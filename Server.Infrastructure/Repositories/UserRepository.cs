@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Google.Apis.Auth;
 using Microsoft.EntityFrameworkCore;
 using Server.Application.Interfaces;
 using Server.Application.Repositories;
@@ -80,6 +81,28 @@ namespace Server.Infrastructure.Repositories
         public async Task<List<User>> GetUsersByRole(int role)
         {
             return await _dbContext.User.Where(u => u.RoleId == role).ToListAsync();
+        }
+
+        public async Task<User?> FindByLoginAsync(string provider, string key)
+        {
+            return await _dbContext.User
+            .Where(u => u.Provider == provider && u.ProviderKey == key)
+            .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> RegisterWithGoogleAsync(GoogleJsonWebSignature.Payload payload)
+        {
+            var user = new User
+            {
+                UserName = payload.Name,
+                Email = payload.Email,
+                Provider = "Google",
+                ProviderKey = payload.Subject
+            };
+
+            _dbContext.User.Add(user);
+            await _dbContext.SaveChangesAsync();
+            return user;
         }
     }
 }

@@ -1,3 +1,5 @@
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.RateLimiting;
 using Server.API;
 using Server.API.Middlewares;
@@ -39,6 +41,8 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
     .AddJwtBearer(options =>
     {
@@ -55,7 +59,12 @@ builder.Services.AddAuthentication(options =>
             ClockSkew = System.TimeSpan.Zero
         };
     })
-    .AddCookie();
+    .AddCookie()
+    .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+    {
+        options.ClientId = builder.Configuration["GoogleAPI:ClientId"];
+        options.ClientSecret = builder.Configuration["GoogleAPI:SecretCode"];
+    });
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -89,6 +98,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 
 
 var app = builder.Build();

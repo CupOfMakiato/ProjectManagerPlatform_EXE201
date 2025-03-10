@@ -35,14 +35,29 @@ namespace Server.Infrastructure.Repositories
             return board;
         }
 
+        public async Task<List<Column>> GetListColumnByBoardId(Guid boardId)
+        {
+            return await _dbContext.Columns
+                .Include(c => c.Board)
+                .Include (c => c.ColumnCreatedByUser)
+                .Where(c => c.BoardId == boardId)
+                .OrderBy(c => c.CollumnPosition)
+                .ToListAsync();
+        }
+
         public async Task<List<Column>> GetListColumns()
         {
             var listColumns = await _dbContext.Columns
                 .Include(c => c.Board)
                 .Include(c => c.ColumnCreatedByUser)
+                .OrderBy(c => c.BoardId)
                 .ToListAsync();
 
             return listColumns;
+        }
+        public async Task<Column> GetColumnByPositionAndBoardId(int position, Guid boardId)
+        {
+            return await _dbContext.Columns.FirstOrDefaultAsync(c => c.CollumnPosition == position && c.BoardId == boardId);
         }
     }
 }

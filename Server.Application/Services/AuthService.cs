@@ -3,7 +3,10 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
+using Google.Apis.Auth;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Server.Application.Interfaces;
@@ -13,6 +16,7 @@ using Server.Contracts.DTO.Auth;
 using Server.Contracts.DTO.User;
 using Server.Domain.Entities;
 using Server.Domain.Enums;
+using static System.Net.WebRequestMethods;
 
 namespace Server.Application.Services
 {
@@ -107,6 +111,68 @@ namespace Server.Application.Services
             {
                 throw new ApplicationException("An error occurred during login.", ex);
             }
+        }
+
+        public async Task<Authenticator> AuthenticateGoogleUserAsync(GoogleUserRequest request)
+        {
+            try
+            {
+                var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, new GoogleJsonWebSignature.ValidationSettings
+                {
+                    Audience = new[] { _configuration["GoogleAPI:ClientId"] }
+                });
+
+                var getAccount = await GetOrCreateExternalLoginUser("Google", payload.Subject, payload.Email);
+                var token = await GenerateJwtToken(getAccount);
+                return token;
+            }
+            catch (InvalidJwtException ex)
+            {
+                throw new ApplicationException("Invalid Google ID token.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred during Google authentication.", ex);
+            }
+        }
+
+        private async Task<User> GetOrCreateExternalLoginUser(string provider, string key, string email)
+        {
+            var user = await _userRepository.FindByLoginAsync(provider, key);
+
+            if (user != null)
+                return user;
+
+            user = await _userRepository.FindByEmail(email);
+
+            if (user == null)
+            {
+                user = new User
+                {
+                    Email = email,
+                    UserName = email,
+                    Balance = 0,
+                    PasswordHash = null,
+                    Status = StatusEnum.Active,
+                    Otp = "",
+                    IsStaff = false,
+                    RoleId = 2,
+                    CreationDate = DateTime.Now,
+                    Provider = provider,
+                    ProviderKey = key,
+                    OtpExpiryTime = DateTime.UtcNow.AddMinutes(10)
+                };
+                await _userRepository.AddAsync(user);
+            }
+            else if (user.Provider != provider || user.ProviderKey != key)
+            {
+                // Cập nhật thông tin đăng nhập từ Google nếu cần
+                user.Provider = provider;
+                user.ProviderKey = key;
+                await _userRepository.UpdateAsync(user);
+            }
+
+            return user;
         }
 
 
