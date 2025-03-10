@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Server.Contracts.Abstractions.RequestAndResponse.Card
 {
-    public class AddNewCardRequest
+    public class UpdateCardRequest
     {
-        public Guid? Id { get; set; }
-        public Guid UserId { get; set; }
-        public Guid ColumnId { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
-        //public AssignedCompletion AssignedCompletion { get; set; }
+        public string Description { get; set; }
+        public CardStatus Status { get; set; }
+        public AssignedCompletion AssignedCompletion { get; set; }
     }
 }

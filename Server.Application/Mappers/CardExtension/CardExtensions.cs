@@ -60,6 +60,64 @@ namespace Server.Application.Mappers.CardExtension
             };
         }
 
+        public static UpdateCardDTO ToUpdateCardDTO(this UpdateCardRequest updateCardRequest)
+        {
+            return new UpdateCardDTO
+            {
+                Id = (Guid)updateCardRequest.Id,
+                Title = updateCardRequest.Title,
+                Description = updateCardRequest.Description,
+                Status = updateCardRequest.Status,
+                AssignedCompletion = updateCardRequest.AssignedCompletion,
+            };
+        }
+
+        public static ChangeCardNameDTO ToChangeCardNameDTO(this ChangeCardNameRequest changeCardNameRequest)
+        {
+            return new ChangeCardNameDTO
+            {
+                Id = (Guid)changeCardNameRequest.Id,
+                Title = changeCardNameRequest.Title,
+            };
+        }
+
+        public static EditCardDescriptionDTO ToEditCardDescriptionDTO(this EditCardDescriptionRequest editCardDescriptionRequest)
+        {
+            return new EditCardDescriptionDTO
+            {
+                Id = (Guid)editCardDescriptionRequest.Id,
+                Description = editCardDescriptionRequest.Description,
+            };
+        }
+
+        public static MoveCardInColumnDTO ToMoveCardInColumnDTO(this MoveCardInColumnRequest moveCardInColumnRequest)
+        {
+            return new MoveCardInColumnDTO
+            {
+                Id = (Guid)moveCardInColumnRequest.Id,
+                ColumnId = moveCardInColumnRequest.ColumnId,
+                NewPosition = moveCardInColumnRequest.NewPosition,
+            };
+        }
+
+        public static MoveCardToColumnDTO ToMoveCardToColumnDTO(this MoveCardToColumnRequest moveCardToListRequest)
+        {
+            return new MoveCardToColumnDTO
+            {
+                Id = (Guid)moveCardToListRequest.Id,
+                NewColumnId = moveCardToListRequest.NewColumnId,
+                NewPosition = moveCardToListRequest.NewPosition,
+            };
+        }
+
+        public static DownloadAttachmentDTO ToDownloadAttachmentDTO(this Attachment attachment)
+        {
+            return new DownloadAttachmentDTO
+            {
+                FileName = attachment.FileName,
+                FileUrl = attachment.FileUrl
+            };
+        }
 
     }
 }

@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.RateLimiting;
 using Server.API;
+using Server.API.Middlewares;
 using Server.Application;
 using Server.Infrastructure;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +19,20 @@ var builder = WebApplication.CreateBuilder(args);
         .AddApplication()
         .AddInfrastructure(builder.Configuration);
 }
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+// Add Rate Limiting
+//builder.Services.AddRateLimiter(options =>
+//{
+//    options.AddFixedWindowLimiter("fixed", limiterOptions =>
+//    {
+//        limiterOptions.Window = TimeSpan.FromSeconds(10);  // 10-sec time window
+//        limiterOptions.PermitLimit = 5;  // Allow max 5 requests per window
+//        limiterOptions.QueueLimit = 2;   // Queue up to 2 extra requests
+//    });
+//});
 
 // Configure JWT authentication
 var key = System.Text.Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]);
@@ -83,8 +100,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 
+
 var app = builder.Build();
 
+app.UseSwagger();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -106,12 +125,21 @@ app.UseExceptionHandler("/Error");
 
 app.UseCors("AllowAllOrigins");
 
-app.UseSwagger();
+
+
+
+// Middleware for performance tracking
+app.UseMiddleware<PerformanceMiddleware>();
+
+
 app.UseHttpsRedirection();
 
+// use authen
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Use Global Exception Middleware 
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.MapControllers();
 
 app.Run();

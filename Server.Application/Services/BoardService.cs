@@ -27,7 +27,11 @@ namespace Server.Application.Services
         private readonly IUserService _userService;
         private readonly IBoardRepository _boardRepository;
         private readonly ICardRepository _cardRepository;
-        public BoardService(IUnitOfWork unitOfWork, IMapper mapper, ICloudinaryService cloudinaryService, IHttpContextAccessor contextAccessor, IEmailService emailService, IUserService userService, IBoardRepository boardRepository, ICardRepository cardRepository)
+        private readonly IRedisService _redisService;
+        public BoardService(IUnitOfWork unitOfWork, IMapper mapper, ICloudinaryService cloudinaryService,
+            IRedisService redisService,
+            IHttpContextAccessor contextAccessor, IEmailService emailService, IUserService userService,
+            IBoardRepository boardRepository, ICardRepository cardRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -35,22 +39,39 @@ namespace Server.Application.Services
             _emailService = emailService;
             _userService = userService;
             _boardRepository = boardRepository;
-            _cardRepository = cardRepository;   
+            _cardRepository = cardRepository;
+            _redisService = redisService;
         }
         public async Task<Pagination<ViewBoardDTO>> ViewAllBoards(int pageIndex, int pageSize)
         {
+            string cacheKey = $"boards_{pageIndex}_{pageSize}"; // Unique cache key
+
+            // Check if data exists in Redis cache
+            var cachedData = await _redisService.GetAsync<Pagination<ViewBoardDTO>>(cacheKey);
+            if (cachedData is not null)
+            {
+                return cachedData; // Return cached data
+            }
+
+            // Fetch data from database
             var totalItemsCount = await _unitOfWork.boardRepository.GetTotalBoardCount(BoardStatus.Open);
             var services = await _unitOfWork.boardRepository.GetPagedBoards(pageIndex, pageSize, BoardStatus.Open);
             var mappedBoards = _mapper.Map<List<ViewBoardDTO>>(services);
 
-            return new Pagination<ViewBoardDTO>
+            var result = new Pagination<ViewBoardDTO>
             {
                 TotalItemsCount = totalItemsCount,
                 PageSize = pageSize,
                 PageIndex = pageIndex,
                 Items = mappedBoards
             };
+
+            // Store in Redis cache for 10 minutes
+            await _redisService.SetAsync(cacheKey, result, TimeSpan.FromMinutes(10));
+
+            return result;
         }
+
         public async Task<Pagination<ViewBoardDTO>> ViewAllClosedBoards(int pageIndex, int pageSize)
         {
             var totalItemsCount = await _unitOfWork.boardRepository.GetTotalBoardCount(BoardStatus.Closed);

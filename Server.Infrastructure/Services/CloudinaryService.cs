@@ -125,6 +125,10 @@ namespace Server.Infrastructure.Services
                 FileUrl = uploadResult.Uri.AbsoluteUri
             };
         }
-
+        // optional...
+        public async Task<string> GetFileUrlAsync(string publicId)
+        {
+            return _cloudinary.Api.UrlImgUp.BuildUrl(publicId);
+        }
     }
 }

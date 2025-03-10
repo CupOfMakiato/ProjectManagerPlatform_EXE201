@@ -11,6 +11,7 @@ namespace Server.Application.Repositories
     public interface ICardRepository : IGenericRepository<Card>
     {
         Task<int> GetTotalCardCount(CardStatus? status = null);
+        Task<int> CountAttachmentsInACard(Guid cardId);
         Task<List<Card>> GetAllCards();
         Task<List<Card>> GetAllOpenCards();
         Task<List<Card>> GetAllArchivedCards();
@@ -18,6 +19,10 @@ namespace Server.Application.Repositories
         Task<List<Card>> GetPagedCards(int pageIndex, int pageSize, CardStatus? status = null);
         Task<List<Card>> SearchCardsAsync(string textSearch);
         Task<List<Card>> GetCardsByBoardId(Guid boardId);
+        Task<List<Card>> GetCardsByColumnId(Guid columnId);
+        Task<List<Card>> GetOpenCardsByColumnId(Guid columnId);
+        Task<List<Card>> GetArchivedCardsByColumnId(Guid columnId);
+
 
         //filter
     }

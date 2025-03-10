@@ -20,13 +20,14 @@ namespace Server.Infrastructure
         private readonly IBoardRepository _boardRepository;
         private readonly ICardRepository _cardRepository;
         private readonly IColumnRepository _columnRepository;
+        private readonly IAttachmentRepository _attachmentRepository;
 
 
 
 
         public UnitOfWork(AppDbContext dbContext, ISubCategoryRepository subCategoryRepository, ICategoryRepository categoryRepository,
             IAuthRepository authRepository, IUserRepository userRepository, IBoardRepository boardRepository, ICardRepository cardRepository,
-            IColumnRepository columnRepository)
+            IColumnRepository columnRepository, IAttachmentRepository attachmentRepository)
         {
             _dbContext = dbContext;
             _subCategoryRepository = subCategoryRepository;
@@ -36,6 +37,7 @@ namespace Server.Infrastructure
             _boardRepository = boardRepository;
             _cardRepository = cardRepository;
             _columnRepository = columnRepository;
+            _attachmentRepository = attachmentRepository;
         }
 
         public ICategoryRepository categoryRepository => _categoryRepository;
@@ -46,6 +48,7 @@ namespace Server.Infrastructure
         public IBoardRepository boardRepository => _boardRepository;
         public ICardRepository cardRepository => _cardRepository;
         public IColumnRepository columnRepository => _columnRepository;
+        public IAttachmentRepository attachmentRepository => _attachmentRepository;
 
 
 

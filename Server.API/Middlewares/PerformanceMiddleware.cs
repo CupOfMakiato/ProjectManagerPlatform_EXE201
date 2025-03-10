@@ -1,25 +1,30 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Server.API.Middlewares
 {
     public class PerformanceMiddleware : IMiddleware
     {
-        private readonly Stopwatch stopwatch;
+        private readonly Stopwatch _stopwatch;
+        private readonly ILogger<PerformanceMiddleware> _logger; // Use ILogger
 
-        public PerformanceMiddleware(Stopwatch stopwatch)
+        public PerformanceMiddleware(ILogger<PerformanceMiddleware> logger)
         {
-            this.stopwatch = stopwatch;
+            _stopwatch = new Stopwatch();
+            _logger = logger;
         }
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            stopwatch.Restart();
-            stopwatch.Start();
-            Console.WriteLine("start performance recored");
-            await next(context);
-            Console.WriteLine("end performance recored");
-            stopwatch.Stop();
-            TimeSpan timeTaken = stopwatch.Elapsed;
-            Console.WriteLine("Time taken: " + timeTaken.ToString(@"m\:ss\.fff"));
+            _stopwatch.Restart();
+            _logger.LogInformation("Performance Tracking: Request started.");
+
+            await next(context); // Call next middleware in the pipeline
+
+            _stopwatch.Stop();
+            _logger.LogInformation($"Performance Tracking: Request ended. Time taken: {_stopwatch.ElapsedMilliseconds} ms.");
         }
     }
 }

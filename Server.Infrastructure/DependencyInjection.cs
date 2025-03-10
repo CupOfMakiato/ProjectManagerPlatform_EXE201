@@ -14,6 +14,7 @@ using Server.Infrastructure.Data;
 using Server.Infrastructure.Repositories;
 using Server.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace Server.Infrastructure
 {
@@ -34,10 +35,11 @@ namespace Server.Infrastructure
             services.AddScoped<IBoardService, BoardService>();
             services.AddScoped<ICardService, CardService>();
             services.AddScoped<IColumnsService, ColumnService>();
+            services.AddScoped<IAttachmentService, AttachmentService>();
             services.AddScoped<PasswordService>();
-            services.AddScoped<RedisService>();
             services.AddScoped<OtpService>();
             services.AddScoped<EmailService>();
+            services.AddScoped<IRedisService, RedisService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             services.AddMemoryCache();
@@ -50,7 +52,9 @@ namespace Server.Infrastructure
             services.AddScoped<IBoardRepository, BoardRepository>();
             services.AddScoped<ICardRepository, CardRepository>();
             services.AddScoped<IColumnRepository, ColumsRepository>();
-            //
+            services.AddScoped<IAttachmentRepository, AttachmentRepository>();
+
+            // Cloudinary
             services.Configure<CloudinarySetting>(configuration.GetSection("CloudinarySetting"));
 
             #region Configuration
@@ -58,8 +62,13 @@ namespace Server.Infrastructure
             #endregion
             // Database Sql
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")
-                ));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
+            );
+
+            // Redis
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
+                ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)
+            );
             return services;
         }
     }
