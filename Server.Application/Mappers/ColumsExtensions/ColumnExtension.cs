@@ -27,6 +27,17 @@ namespace Server.Application.Mappers.ColumsExtensions
                 Board = column.Board.ToViewBoardDTO()
             };
         }
+        public static ViewColumnDTO ToViewColumnByBoardIdDTO(this Column column)
+        {
+            return new ViewColumnDTO
+            {
+                Id = column.Id,
+                Title = column.Title,
+                CollumnPosition = column.CollumnPosition,
+                Status = (Domain.Enums.ColumnStatus)column.Status,
+                CreatedByUser = column.ColumnCreatedByUser.ToUserDTO(),
+            };
+        }
         public static Column ToColums(this AddColumsDTO addColumsDTO, Guid userId)
         {
             return new Column

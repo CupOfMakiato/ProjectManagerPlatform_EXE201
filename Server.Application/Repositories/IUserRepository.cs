@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Google.Apis.Auth;
 using Server.Domain.Entities;
 
 namespace Server.Application.Repositories
@@ -7,6 +8,13 @@ namespace Server.Application.Repositories
     {
         Task<IList<User>> GetALl();
         Task<User?> FindByEmail(string email);
+
+        // Login Google
+        Task<User?> FindByLoginAsync(string provider, string key);
+        Task<User> RegisterWithGoogleAsync(GoogleJsonWebSignature.Payload payload);
+
+
+
         Task UpdateAsync(User user);
         Task AddAsync(User user);
         Task<User> GetUserByEmail(string email);
