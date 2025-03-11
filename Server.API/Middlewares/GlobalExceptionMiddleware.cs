@@ -1,4 +1,8 @@
-﻿namespace Server.API.Middlewares
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Threading.Tasks;
+
+namespace Server.API.Middlewares
 {
     public class GlobalExceptionMiddleware : IMiddleware
     {

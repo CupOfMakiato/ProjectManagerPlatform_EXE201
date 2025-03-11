@@ -13,6 +13,10 @@ using Server.Domain.Enums;
 using System.Security.Claims;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Linq;
 
 namespace Server.API.Controllers
 {

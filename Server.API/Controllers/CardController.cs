@@ -14,6 +14,9 @@ using Server.Contracts.Abstractions.RequestAndResponse.Card;
 using Server.Contracts.Abstractions.Shared;
 using Server.Contracts.DTO.Board;
 using Server.Contracts.DTO.Card;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.API.Controllers
 {

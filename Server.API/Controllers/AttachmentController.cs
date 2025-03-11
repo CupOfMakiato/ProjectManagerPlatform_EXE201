@@ -7,6 +7,9 @@ using Server.Application.Validations.CardValidations;
 using Server.Contracts.Abstractions.RequestAndResponse.Attachment;
 using Server.Contracts.Abstractions.RequestAndResponse.Card;
 using Server.Contracts.Abstractions.Shared;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.API.Controllers
 {
