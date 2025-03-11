@@ -17,6 +17,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Server.Domain.Entities;
 
 namespace Server.Application.Services
 {
@@ -189,6 +190,61 @@ namespace Server.Application.Services
                     Data = null
                 };
             }
+        }
+
+        public async Task<Result<object>> CopyColumn(CopyColumn copyColumn)
+        {
+            var getColumn = await _columnRepository.GetColumnsById(copyColumn.ColumnId);
+            var getListColumn = await _columnRepository.GetListColumnByBoardId(getColumn.BoardId);
+            int count = getListColumn.Count;
+            
+            if(getColumn == null)
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Column not found",
+                    Data = null
+                };
+
+            var newColumn = new Column()
+            {
+                Id = Guid.NewGuid(),
+                Title = copyColumn.Title,   
+                CollumnPosition = count++,
+                Status = ColumnStatus.Open,
+                BoardId = getColumn.BoardId,
+                CreationDate = DateTime.Now,
+                CreatedBy = getColumn.CreatedBy,
+                IsDeleted = false,
+                Cards = new List<Card>()
+            };
+
+            await _unitOfWork.columnRepository.AddAsync(newColumn);
+
+            foreach (var oldCard in getColumn.Cards)
+            {
+                var newCard = new Card
+                {
+                    Id = Guid.NewGuid(), // Tạo Id mới cho Card
+                    Title = oldCard.Title,
+                    Description = oldCard.Description,
+                    ColumnId = newColumn.Id, // Gán vào Column mới
+                    CardPosition = oldCard.CardPosition, // Giữ nguyên vị trí
+                    Status = oldCard.Status,
+                    AssignedCompletion = oldCard.AssignedCompletion,
+                    IsDeleted = false // Đảm bảo không bị xóa
+                };
+
+                await _unitOfWork.cardRepository.AddAsync(newCard); // Thêm Card mới vào Column mới
+                _unitOfWork.SaveChangeAsync();
+            }
+            _unitOfWork.SaveChangeAsync();
+            return new Result<object>
+            {
+                Error = 0,
+                Message = "Copy Column Successfully",
+                Data = null
+            };
         }
     }
 }

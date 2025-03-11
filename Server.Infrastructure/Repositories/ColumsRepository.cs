@@ -31,6 +31,7 @@ namespace Server.Infrastructure.Repositories
                 .Where(c => c.Id == id)
                 .Include(c => c.Board)
                 .Include(c => c.ColumnCreatedByUser)
+                .Include(c => c.Cards)
                 .FirstOrDefaultAsync();
             return board;
         }

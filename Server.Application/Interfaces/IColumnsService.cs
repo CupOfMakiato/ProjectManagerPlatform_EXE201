@@ -20,5 +20,6 @@ namespace Server.Application.Interfaces
         Task<Result<object>> UpdateColumn(Guid id, UpdateBoardDTO updateBoardDTO);
         Task<Result<object>> DeleteColumn(Guid columnId);
         Task<Result<object>> MoveColumnInBoard(MoveColumnDTO moveColumnDTO);
+        Task<Result<object>> CopyColumn(CopyColumn copyColumn);
     }
 }
