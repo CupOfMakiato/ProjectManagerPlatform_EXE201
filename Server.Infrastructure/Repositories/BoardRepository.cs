@@ -39,6 +39,32 @@ namespace Server.Infrastructure.Repositories
             return await query.CountAsync();
         }
 
+        public async Task<List<Board>> GetBoardsAsync()
+        {
+            return await _dbContext.Boards
+                .Include(c => c.BoardCreatedByUser)
+                .Where(c => !c.IsDeleted)
+                .ToListAsync();
+        }
+
+        public async Task<List<Board>> GetAllOpenBoards()
+        {
+            return await _dbContext.Boards
+                .Where(c => c.Status == BoardStatus.Open)
+                .Where(c => !c.IsDeleted)
+                .Include(c => c.BoardCreatedByUser)
+                .ToListAsync();
+        }
+
+        public async Task<List<Board>> GetAllClosedBoards()
+        {
+            return await _dbContext.Boards
+                .Where(c => c.Status == BoardStatus.Closed)
+                .Where(c => !c.IsDeleted)
+                .Include(c => c.BoardCreatedByUser)
+                .ToListAsync();
+        }
+
         public async Task<Board> GetBoardById(Guid id)
         {
             return await _dbContext.Boards.Where(c => c.Id == id).Include(c => c.BoardCreatedByUser).FirstOrDefaultAsync();

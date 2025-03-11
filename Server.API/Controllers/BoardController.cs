@@ -7,6 +7,7 @@ using Server.Application.Validations.BoardValidations;
 using Server.Contracts.Abstractions.RequestAndResponse.Board;
 using Server.Contracts.Abstractions.Shared;
 using Server.Contracts.DTO.Board;
+using Server.Contracts.DTO.Card;
 
 namespace Server.API.Controllers
 {
@@ -22,12 +23,12 @@ namespace Server.API.Controllers
             _mapper = mapper;
             _boardService = boardService;
         }
-        [HttpGet("ViewAllBoards")]
+        [HttpGet("ViewAllBoardsPagin")]
         [ProducesResponseType(200, Type = typeof(ViewBoardDTO))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
-        public async Task<IActionResult> ViewAllBoards(int pageIndex = 0, int pageSize = 10)
+        public async Task<IActionResult> ViewAllBoardsPagin(int pageIndex = 0, int pageSize = 10)
         {
-            var board = await _boardService.ViewAllBoards(pageIndex, pageSize);
+            var board = await _boardService.ViewAllBoardsPagin(pageIndex, pageSize);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -72,17 +73,41 @@ namespace Server.API.Controllers
 
             return Ok(result);
         }
-        [HttpGet("ViewAllClosedBoards")]
+        [HttpGet("ViewAllClosedBoardsPagin")]
         [ProducesResponseType(200, Type = typeof(Pagination<ViewBoardDTO>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
-        public async Task<IActionResult> ViewAllClosedBoards(int pageIndex = 0, int pageSize = 10)
+        public async Task<IActionResult> ViewAllClosedBoardsPagin(int pageIndex = 0, int pageSize = 10)
         {
-            var closedBoards = await _boardService.ViewAllClosedBoards(pageIndex, pageSize);
+            var closedBoards = await _boardService.ViewAllClosedBoardsPagin(pageIndex, pageSize);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(closedBoards);
+        }
+
+        [HttpGet("ViewAllOpenBoards")]
+        [ProducesResponseType(200, Type = typeof(ViewBoardDTO))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ViewAllOpenBoards()
+        {
+            var board = await _boardService.ViewAllOpenBoards();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            return Ok(board);
+        }
+
+        [HttpGet("ViewAllClosedBoards")]
+        [ProducesResponseType(200, Type = typeof(ViewBoardDTO))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ViewAllClosedBoards()
+        {
+            var board = await _boardService.ViewAllClosedBoards();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            return Ok(board);
         }
 
         [HttpPost("ArchiveBoard/{boardId}")]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Server.Application.Common;
 using Server.Application.Interfaces;
 using Server.Application.Mappers.BoardExtension;
+using Server.Application.Mappers.CardExtension;
 using Server.Application.Repositories;
 using Server.Contracts.Abstractions.CloudinaryService;
 using Server.Contracts.Abstractions.Shared;
@@ -42,7 +43,7 @@ namespace Server.Application.Services
             _cardRepository = cardRepository;
             _redisService = redisService;
         }
-        public async Task<Pagination<ViewBoardDTO>> ViewAllBoards(int pageIndex, int pageSize)
+        public async Task<Pagination<ViewBoardDTO>> ViewAllBoardsPagin(int pageIndex, int pageSize)
         {
             string cacheKey = $"boards_{pageIndex}_{pageSize}"; // Unique cache key
 
@@ -72,7 +73,7 @@ namespace Server.Application.Services
             return result;
         }
 
-        public async Task<Pagination<ViewBoardDTO>> ViewAllClosedBoards(int pageIndex, int pageSize)
+        public async Task<Pagination<ViewBoardDTO>> ViewAllClosedBoardsPagin(int pageIndex, int pageSize)
         {
             var totalItemsCount = await _unitOfWork.boardRepository.GetTotalBoardCount(BoardStatus.Closed);
             var closedBoards = await _unitOfWork.boardRepository.GetPagedBoards(pageIndex, pageSize, BoardStatus.Closed);
@@ -87,6 +88,29 @@ namespace Server.Application.Services
             };
         }
 
+        public async Task<Result<object>> ViewAllOpenBoards()
+        {
+            var boards = await _unitOfWork.boardRepository.GetAllOpenBoards();
+            var result = boards.Select(board => board.ToViewBoardDTO()).ToList();
+            return new Result<object>
+            {
+                Error = result.Any() ? 0 : 1,
+                Message = result.Any() ? "Opened boards retrieved successfully" : "No open boards found",
+                Data = result
+            };
+        }
+
+        public async Task<Result<object>> ViewAllClosedBoards()
+        {
+            var boards = await _unitOfWork.boardRepository.GetAllClosedBoards();
+            var result = boards.Select(board => board.ToViewBoardDTO()).ToList();
+            return new Result<object>
+            {
+                Error = result.Any() ? 0 : 1,
+                Message = result.Any() ? "Closed boards retrieved successfully" : "No closed boards found",
+                Data = result
+            };
+        }
 
         public async Task<Result<object>> ViewBoardById(Guid cardId)
         {

@@ -13,7 +13,7 @@ namespace Server.Contracts.Abstractions.RequestAndResponse.Board
         public Guid UserId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public BoardStatus Status { get; set; }
+        //public BoardStatus Status { get; set; }
         public BoardType Type { get; set; }
         //public IFormFile ThumbNail { get; set; }
     }
