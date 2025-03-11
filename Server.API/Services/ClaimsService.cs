@@ -1,4 +1,6 @@
-﻿using Server.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Http;
+using Server.Application.Interfaces;
+using System;
 using System.Security.Claims;
 
 namespace Server.API.Services
