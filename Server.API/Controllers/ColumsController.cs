@@ -111,5 +111,18 @@ namespace Server.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("CopyColumn")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> CopyColumn([FromForm] CopyColumn copyColumn)
+        {
+            var result = await _columnsService.CopyColumn(copyColumn);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(result);
+        }
     }
 }
