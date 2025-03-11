@@ -11,15 +11,24 @@ namespace Server.Application.Interfaces
 {
     public interface IBoardService
     {
-        Task<Pagination<ViewBoardDTO>> ViewAllBoards(int pageIndex, int pageSize);
-        Task<Pagination<ViewBoardDTO>> ViewAllClosedBoards(int pageIndex, int pageSize);
+        // View 
+        Task<Pagination<ViewBoardDTO>> ViewAllBoardsPagin(int pageIndex, int pageSize);
+        Task<Pagination<ViewBoardDTO>> ViewAllClosedBoardsPagin(int pageIndex, int pageSize);
         Task<Result<object>> ViewBoardById(Guid serviceId);
+        Task<Result<object>> ViewAllOpenBoards();
+        Task<Result<object>> ViewAllClosedBoards();
+
+
+        // Add
         Task<Result<object>> AddNewBoard(AddBoardDTO addBoardDTO);
+        // update
         Task<Result<object>> ArchiveBoard(Guid boardId);
         Task<Result<object>> UnarchiveBoard(Guid boardId);
         Task<Result<object>> UpdateBoard(UpdateBoardDTO updateBoardDTO);
         Task<Result<object>> ChangeBoardName(ChangeBoardNameDTO changeBoardNameDTO);
+        // Delete
         Task<Result<object>> DeleteBoard(Guid boardId);
+        //view cards
         Task<Result<object>> ViewAllCardsFromABoard(Guid boardId);
 
         // Filter 

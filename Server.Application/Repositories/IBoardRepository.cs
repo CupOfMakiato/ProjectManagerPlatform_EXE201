@@ -10,6 +10,9 @@ namespace Server.Application.Repositories
 {
     public interface IBoardRepository : IGenericRepository<Board>
     {
+        Task<List<Board>> GetBoardsAsync();
+        Task<List<Board>> GetAllOpenBoards();
+        Task<List<Board>> GetAllClosedBoards();
         Task<int> GetTotalBoardCount(BoardStatus? status = null);
         Task<Board> GetBoardById(Guid id);
         Task<List<Board>> GetPagedBoards(int pageIndex, int pageSize, BoardStatus? status = null);

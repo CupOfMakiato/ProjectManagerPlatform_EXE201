@@ -9,6 +9,6 @@ namespace Server.Domain.Enums
     public enum BoardType
     {
         Board = 1,
-        Calendar = 0
+        Calendar = 2
     }
 }
