@@ -119,5 +119,16 @@ namespace Server.Application.Mappers.CardExtension
             };
         }
 
+        public static AddDueDateToCardDTO ToAddDueDateToCardDTO(this AddDueDateToCardRequest addDueDateToCardRequest)
+        {
+            return new AddDueDateToCardDTO
+            {
+                CardId = (Guid)addDueDateToCardRequest.CardId,
+                StartDate = addDueDateToCardRequest.StartDate,
+                DueDate = addDueDateToCardRequest.DueDate,
+                Reminder = addDueDateToCardRequest.Reminder
+            };
+        }
+
     }
 }

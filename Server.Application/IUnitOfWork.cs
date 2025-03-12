@@ -18,6 +18,7 @@ namespace Server.Application
         ICardRepository cardRepository { get; }
         IColumnRepository columnRepository { get; }
         IAttachmentRepository attachmentRepository { get; }
+        INotificationRepository notificationRepository { get; }
 
 
         public Task<int> SaveChangeAsync();

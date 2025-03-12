@@ -204,6 +204,31 @@ namespace Server.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("AddDueDateToCard")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> AddDueDateToCard([FromForm] AddDueDateToCardRequest req)
+        {
+            // Validate request
+            var validator = new AddDueDateToCardRequestValidator();
+            var validatorResult = validator.Validate(req);
+            if (!validatorResult.IsValid)
+            {
+                return BadRequest(new Result<object>
+                {
+                    Error = 1,
+                    Message = "Validation failed!",
+                    Data = validatorResult.Errors.Select(x => x.ErrorMessage),
+                });
+            }
+
+            var cardMapper = req.ToAddDueDateToCardDTO();
+
+            var result = await _cardService.AddDueDateToCard(cardMapper);
+
+            return Ok(result);
+        }
+
         [HttpDelete("DeleteCard/{cardId}")]
         [ProducesResponseType(200, Type = typeof(Result<object>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]

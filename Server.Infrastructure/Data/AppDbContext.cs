@@ -77,6 +77,10 @@ public class AppDbContext : DbContext
             .HasConversion(v => v.ToString(), v => (AssignedCompletion)Enum.Parse(typeof(AssignedCompletion), v));
 
         modelBuilder.Entity<Card>()
+            .Property(s => s.Reminder)
+            .HasConversion(v => v.ToString(), v => (ReminderType)Enum.Parse(typeof(ReminderType), v));
+
+        modelBuilder.Entity<Card>()
             .HasOne(c => c.CardCreatedByUser)
             .WithMany()
             .HasForeignKey(c => c.CreatedBy)
@@ -87,5 +91,14 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(a => a.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Notification>()
+            .Property(s => s.EntityType)
+            .HasConversion(v => v.ToString(), v => (EntityType)Enum.Parse(typeof(EntityType), v));
+
+        modelBuilder.Entity<Notification>()
+            .Property(s => s.MessageType)
+            .HasConversion(v => v.ToString(), v => (NotificationType)Enum.Parse(typeof(NotificationType), v));
+
     }
 }

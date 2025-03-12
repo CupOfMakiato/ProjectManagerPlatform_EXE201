@@ -23,6 +23,9 @@ namespace Server.Application.Repositories
         Task<List<Card>> GetOpenCardsByColumnId(Guid columnId);
         Task<List<Card>> GetArchivedCardsByColumnId(Guid columnId);
 
+        // due date
+        Task<List<Card>> GetCardsDueBeforeAsync(DateTime dueDate);
+
 
         //filter
     }

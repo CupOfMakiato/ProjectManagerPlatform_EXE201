@@ -150,6 +150,12 @@ namespace Server.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Card>> GetCardsDueBeforeAsync(DateTime dueDate)
+        {
+            return await _dbContext.Set<Card>()
+                .Where(c => c.DueDate != null && c.DueDate <= dueDate)
+                .ToListAsync();
+        }
 
         public async Task<List<Card>> SearchCardsAsync(string textSearch)
         {

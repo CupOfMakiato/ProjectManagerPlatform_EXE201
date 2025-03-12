@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MediatR;
 using Server.Application;
 using Server.Application.Repositories;
+using Server.Domain.Entities;
 using Server.Infrastructure.Data;
 using Server.Infrastructure.Repositories;
 
@@ -21,13 +23,16 @@ namespace Server.Infrastructure
         private readonly ICardRepository _cardRepository;
         private readonly IColumnRepository _columnRepository;
         private readonly IAttachmentRepository _attachmentRepository;
+        private readonly INotificationRepository _notificationRepository;
+        
 
 
 
 
         public UnitOfWork(AppDbContext dbContext, ISubCategoryRepository subCategoryRepository, ICategoryRepository categoryRepository,
             IAuthRepository authRepository, IUserRepository userRepository, IBoardRepository boardRepository, ICardRepository cardRepository,
-            IColumnRepository columnRepository, IAttachmentRepository attachmentRepository)
+            IColumnRepository columnRepository, IAttachmentRepository attachmentRepository, INotificationRepository notificationRepository
+            )
         {
             _dbContext = dbContext;
             _subCategoryRepository = subCategoryRepository;
@@ -38,6 +43,8 @@ namespace Server.Infrastructure
             _cardRepository = cardRepository;
             _columnRepository = columnRepository;
             _attachmentRepository = attachmentRepository;
+            _notificationRepository = notificationRepository;
+            
         }
 
         public ICategoryRepository categoryRepository => _categoryRepository;
@@ -49,6 +56,7 @@ namespace Server.Infrastructure
         public ICardRepository cardRepository => _cardRepository;
         public IColumnRepository columnRepository => _columnRepository;
         public IAttachmentRepository attachmentRepository => _attachmentRepository;
+        public INotificationRepository notificationRepository => _notificationRepository;
 
 
 

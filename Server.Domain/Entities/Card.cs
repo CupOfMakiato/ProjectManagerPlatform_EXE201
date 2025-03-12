@@ -25,10 +25,8 @@ namespace Server.Domain.Entities
         public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
         public User CardCreatedByUser { get; set; }
 
-
-        /*
-         * StartDate
-         * EndDate
-        */
+        public DateTime? DueDate { get; set; } 
+        public DateTime? StartDate { get; set; }
+        public ReminderType? Reminder { get; set; } = ReminderType.None;
     }
 }

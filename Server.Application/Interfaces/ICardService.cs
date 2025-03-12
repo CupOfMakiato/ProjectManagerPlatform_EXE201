@@ -28,6 +28,9 @@ namespace Server.Application.Interfaces
         Task<Result<object>> UpdateCard(UpdateCardDTO updateCardDTO);
         Task<Result<object>> ChangeCardName(ChangeCardNameDTO changeCardNameDTO);
         Task<Result<object>> EditCardDescription(EditCardDescriptionDTO editCardDescriptionDTO);
+
+        //Add due date
+        Task<Result<object>> AddDueDateToCard(AddDueDateToCardDTO addDueDateDTO);
         // Delete cards
         Task<Result<object>> DeleteCard(Guid cardId);
 
