@@ -1,5 +1,4 @@
-﻿using MediatR;
-
+﻿
 namespace Server.Domain.Entities
 {
     public abstract class BaseEntity
@@ -19,15 +18,5 @@ namespace Server.Domain.Entities
         public Guid? DeleteBy { get; set; }
 
         public bool IsDeleted { get; set; }
-
-        private readonly List<INotification> _domainEvents = new();
-        public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
-
-        protected void AddDomainEvent(INotification eventItem)
-        {
-            _domainEvents.Add(eventItem);
-        }
-
-        public void ClearDomainEvents() => _domainEvents.Clear();
     }
 }
