@@ -7,7 +7,6 @@ using Server.Application.Interfaces;
 using Server.Application.Mappers.CardExtension;
 using Server.Application.Services;
 using Server.Application.Validations.BoardValidations;
-using Server.Application.Validations.CardValidate;
 using Server.Application.Validations.CardValidations;
 using Server.Contracts.Abstractions.RequestAndResponse.Board;
 using Server.Contracts.Abstractions.RequestAndResponse.Card;

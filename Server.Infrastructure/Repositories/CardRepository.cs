@@ -157,6 +157,30 @@ namespace Server.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Card>> GetCardsWithUpcomingReminders(DateTime now)
+        {
+            return await _dbContext.Cards
+                .Where(card => card.DueDate.HasValue
+                    && card.Reminder.HasValue
+                    && card.Reminder != ReminderType.None
+                    && GetReminderTime(card.DueDate.Value, card.Reminder.Value) <= now
+                    && card.DueDate.Value > now) // Ensure it's not overdue
+                .ToListAsync();
+        }
+
+        private static DateTime GetReminderTime(DateTime dueDate, ReminderType reminder)
+        {
+            return reminder switch
+            {
+                ReminderType.FiveMinutes => dueDate.AddMinutes(-5),
+                ReminderType.TenMinutes => dueDate.AddMinutes(-10),
+                ReminderType.OneHour => dueDate.AddHours(-1),
+                ReminderType.OneDay => dueDate.AddDays(-1),
+                ReminderType.TwoDays => dueDate.AddDays(-2),
+                _ => dueDate // Default (should not happen)
+            };
+        }
+
         public async Task<List<Card>> SearchCardsAsync(string textSearch)
         {
             return await _dbContext.Cards

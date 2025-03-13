@@ -26,26 +26,29 @@ namespace Server.Infrastructure.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await CheckDueDateRemindersAsync();
-                await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken); // Run every 10 minutes
+                await CheckDueDateReminders();
+                await Task.Delay(TimeSpan.FromHours(1), stoppingToken); // Run every hour
             }
         }
 
-        private async Task CheckDueDateRemindersAsync()
+        private async Task CheckDueDateReminders()
         {
             using var scope = _scopeFactory.CreateScope();
             var cardRepository = scope.ServiceProvider.GetRequiredService<ICardRepository>();
             var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
 
-            var upcomingDueDate = DateTime.UtcNow.AddHours(6); // Notify tasks due in the next 6 hours
-            var dueCards = await cardRepository.GetCardsDueBeforeAsync(upcomingDueDate);
+            var now = DateTime.UtcNow;
+
+            // Fetch cards that have reminders set and are within the notification window
+            var dueCards = await cardRepository.GetCardsWithUpcomingReminders(now);
 
             foreach (var card in dueCards)
             {
-                await notificationService.SendDueDateReminderAsync(card);
+                await notificationService.SendDueDateReminder(card);
             }
 
             _logger.LogInformation("Checked and sent due date reminders.");
         }
+
     }
 }

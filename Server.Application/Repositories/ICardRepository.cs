@@ -25,6 +25,7 @@ namespace Server.Application.Repositories
 
         // due date
         Task<List<Card>> GetCardsDueBeforeAsync(DateTime dueDate);
+        Task<List<Card>> GetCardsWithUpcomingReminders(DateTime now);
 
 
         //filter

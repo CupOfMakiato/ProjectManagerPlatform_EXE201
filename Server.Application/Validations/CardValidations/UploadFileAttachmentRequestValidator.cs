@@ -4,12 +4,12 @@ using Server.Contracts.Abstractions.RequestAndResponse.Card;
 using System.IO;
 using System.Linq;
 
-namespace Server.Application.Validations.CardValidate
+namespace Server.Application.Validations.CardValidations
 {
     public class UploadFileAttachmentRequestValidator : AbstractValidator<UploadFileAttachmentRequest>
     {
         private readonly long _maxFileSize = 5 * 1024 * 1024; // 5MB
-        private readonly string[] _allowedExtensions = 
+        private readonly string[] _allowedExtensions =
             { ".jpg", ".jpeg", ".png", ".gif", ".webp", ".pdf",
             ".docx", ".doc", ".pptx", ".ppt", ".pdf",
             ".xlsx", ".ods", ".pptx", ".txt", ".rar", ".zip", ".7z",

@@ -28,5 +28,6 @@ namespace Server.Domain.Entities
         public DateTime? DueDate { get; set; } 
         public DateTime? StartDate { get; set; }
         public ReminderType? Reminder { get; set; } = ReminderType.None;
+
     }
 }

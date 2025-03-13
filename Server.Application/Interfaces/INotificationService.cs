@@ -16,6 +16,6 @@ namespace Server.Application.Interfaces
         Task<List<Notification>> GetUserNotificationsAsync(Guid userId);
         Task MarkAsReadAsync(Guid notificationId);
         // due date card reminder
-        Task SendDueDateReminderAsync(Card card);
+        Task SendDueDateReminder(Card card);
     }
 }

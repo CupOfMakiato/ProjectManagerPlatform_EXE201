@@ -10,5 +10,6 @@ namespace Server.Application.Repositories
     public interface INotificationRepository : IGenericRepository<Notification>
     {
         Task<List<Notification>> GetUnreadNotificationsAsync(Guid userId);
+
     }
 }

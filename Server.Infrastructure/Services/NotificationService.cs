@@ -120,7 +120,7 @@ namespace Server.Infrastructure.Services
         /// <summary>
         /// Sends a due date reminder notification via SignalR and Email.
         /// </summary>
-        public async Task SendDueDateReminderAsync(Card card)
+        public async Task SendDueDateReminder(Card card)
         {
             var userId = card.CardCreatedByUser.Id; 
             var user = await _userRepository.GetByIdAsync(userId);

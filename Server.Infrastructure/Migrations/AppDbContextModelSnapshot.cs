@@ -78,7 +78,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Activities");
+                    b.ToTable("Activities", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Attachment", b =>
@@ -134,7 +134,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasIndex("CardId");
 
-                    b.ToTable("Attachments");
+                    b.ToTable("Attachments", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Board", b =>
@@ -182,7 +182,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Boards");
+                    b.ToTable("Boards", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Card", b =>
@@ -246,7 +246,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Cards");
+                    b.ToTable("Cards", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Category", b =>
@@ -282,7 +282,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Checklist", b =>
@@ -314,7 +314,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Checklists");
+                    b.ToTable("Checklists", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Column", b =>
@@ -363,7 +363,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Columns");
+                    b.ToTable("Columns", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Label", b =>
@@ -395,7 +395,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Labels");
+                    b.ToTable("Labels", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Notification", b =>
@@ -459,7 +459,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notification", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Role", b =>
@@ -476,7 +476,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Role", (string)null);
 
                     b.HasData(
                         new
@@ -529,7 +529,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategory");
+                    b.ToTable("SubCategory", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.User", b =>
@@ -619,7 +619,7 @@ namespace Server.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.Activity", b =>

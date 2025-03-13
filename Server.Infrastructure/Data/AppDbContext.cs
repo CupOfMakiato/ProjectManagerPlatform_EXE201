@@ -30,6 +30,10 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //modelBuilder.Entity<Card>().ToTable(tb => tb.HasTrigger("trg_Cards_Change"));
+        //modelBuilder.Entity<Board>().ToTable(tb => tb.HasTrigger("TriggerName"));
+        //modelBuilder.Entity<Attachment>().ToTable(tb => tb.HasTrigger("TriggerName"));
+        //modelBuilder.Entity<Notification>().ToTable(tb => tb.HasTrigger("TriggerName"));
 
         modelBuilder.Entity<Role>().HasData(
            new Role { Id = 1, RoleName = "Admin" },
