@@ -12,6 +12,6 @@ namespace Server.Application.Interfaces
         Task AddNotificationToDatabase(Notification notification);
         Task<List<Notification>> GetUserNotifications(Guid userId);
         Task MarkNotificationAsRead(Guid notificationId);
-        Task<Notification> PrNotification(string message, string card, string EntityChange);
+        //Task<Notification> PrNotification(string message, string card, string EntityChange);
     }
 }

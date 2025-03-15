@@ -632,7 +632,7 @@ namespace Server.Application.Services
                     addDueDateDTO.StartDate.Value.Year,
                     addDueDateDTO.StartDate.Value.Month,
                     addDueDateDTO.StartDate.Value.Day,
-                    0, 0, 0, DateTimeKind.Utc // Midnight UTC
+                    0, 0, 0, DateTimeKind.Utc 
                 );
             }
 

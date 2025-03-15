@@ -26,33 +26,33 @@ namespace Server.Application.Services
             await _unitOfWork.SaveChangeAsync();
         }
 
-        public async Task<Notification> PrNotification(string message, string card, string EntityChange)
-        {
-            //Get user who recieve notification
-            var user = await _unitOfWork.userRepository.GetAllAsync();
+        //public async Task<Notification> PrNotification(string message, string card, string EntityChange)
+        //{
+        //    //Get user who recieve notification
+        //    var user = await _unitOfWork.userRepository.GetAllAsync();
 
-            // Create Notification
-            Notification notification = new Notification()
-            {
-                Message = message,
-                MessageType = (Domain.Enums.NotificationType)3,
-                IsRead = false,
-                IsSent = false,
-                CreationDate = DateTime.Now,
-                SpecificEntityChange = EntityChange
-            };
+        //    // Create Notification
+        //    Notification notification = new Notification()
+        //    {
+        //        Message = message,
+        //        MessageType = (Domain.Enums.NotificationType)3,
+        //        IsRead = false,
+        //        IsSent = false,
+        //        CreationDate = DateTime.Now,
+        //        SpecificEntityChange = EntityChange
+        //    };
 
-            foreach (var item in user)
-            {
-                notification.UserId = item.Id;
+        //    foreach (var item in user)
+        //    {
+        //        notification.NotificationCreatedByUser = item.Id;
 
-                await _notificationRepository.AddAsync(notification);
-            }
+        //        await _notificationRepository.AddAsync(notification);
+        //    }
 
-            await _unitOfWork.SaveChangeAsync();
+        //    await _unitOfWork.SaveChangeAsync();
 
-            return notification;
-        }
+        //    return notification;
+        //}
 
         public async Task<List<Notification>> GetUserNotifications(Guid userId)
         {

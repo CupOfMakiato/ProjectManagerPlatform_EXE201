@@ -55,7 +55,7 @@ namespace Server.Infrastructure.Services
         {
             var notification = new Notification
             {
-                UserId = userId,
+                CreatedBy = userId,
                 Message = message,
                 MessageType = type,
                 EntityType = entityType,
@@ -111,7 +111,7 @@ namespace Server.Infrastructure.Services
         /// </summary>
         private async Task NotifyUserAsync(Notification notification)
         {
-            if (NotificationHub._ConnectionsMap.TryGetValue(notification.UserId, out var connectionId))
+            if (NotificationHub._ConnectionsMap.TryGetValue((Guid)notification.CreatedBy, out var connectionId))
             {
                 await _hubContext.Clients.Client(connectionId).SendAsync("ReceivedNotification", notification);
             }
@@ -131,7 +131,7 @@ namespace Server.Infrastructure.Services
             // Save the notification
             var notification = new Notification
             {
-                UserId = user.Id,
+                CreatedBy = user.Id,
                 Message = message,
                 MessageType = NotificationType.Warning, // Changed from Reminder to Warning
                 EntityType = EntityType.Card,

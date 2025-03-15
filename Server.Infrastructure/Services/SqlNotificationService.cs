@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Server.Application.Interfaces;
+using Server.Application.Repositories;
 using Server.Application.Services;
 using Server.Domain.Entities;
+using Server.Domain.Enums;
 using Server.Infrastructure.Hubs;
 using System;
 using System.Threading.Tasks;
 using TableDependency.SqlClient;
+using TableDependency.SqlClient.Base;
 using TableDependency.SqlClient.Base.EventArgs;
 
 namespace Server.Infrastructure.Services
@@ -14,7 +17,6 @@ namespace Server.Infrastructure.Services
     public class SqlNotificationService : ISqlNotificationService, IDisposable
     {
         private readonly IServiceScopeFactory _scopeFactory;
-        NotificationHub _notificationHub;
 
         private SqlTableDependency<Card> _cardTableDependency;
         private SqlTableDependency<Board> _boardTableDependency;
@@ -22,94 +24,159 @@ namespace Server.Infrastructure.Services
         private SqlTableDependency<Column> _columnTableDependency;
         private SqlTableDependency<Notification> _notificationTableDependency;
 
-        public SqlNotificationService(IServiceScopeFactory scopeFactory, NotificationHub hubContext)
+        private readonly IHubContext<NotificationHub> _notificationHub;
+
+        public SqlNotificationService(IServiceScopeFactory scopeFactory, IHubContext<NotificationHub> hubContext)
         {
             _scopeFactory = scopeFactory;
             _notificationHub = hubContext;
         }
 
+
         public void CardTableDependency(string connectionString)
         {
-            Console.WriteLine("Initializing CardTableDependency...");
             _cardTableDependency = new SqlTableDependency<Card>(connectionString, "Cards");
             _cardTableDependency.OnChanged += TableDependency_OnChanged;
             _cardTableDependency.OnError += TableDependency_OnError;
             _cardTableDependency.Start();
-            Console.WriteLine($"CardTableDependency Status: {_cardTableDependency.Status}");
         }
 
-        //public void BoardTableDependency(string connectionString)
-        //{
-        //    _boardTableDependency = new SqlTableDependency<Board>(connectionString, "Boards");
-        //    _boardTableDependency.OnChanged += (sender, e) => TableDependency_OnChanged(e, "Board");
-        //    _boardTableDependency.OnError += TableDependency_OnError;
-        //    _boardTableDependency.Start();
-        //}
+        public void BoardTableDependency(string connectionString)
+        {
+            _boardTableDependency = new SqlTableDependency<Board>(connectionString, "Boards");
+            _boardTableDependency.OnChanged += TableDependency_OnChanged;
+            _boardTableDependency.OnError += TableDependency_OnError;
+            _boardTableDependency.Start();
+        }
 
-        //public void AttachmentTableDependency(string connectionString)
-        //{
-        //    _attachmentTableDependency = new SqlTableDependency<Attachment>(connectionString, "Attachments");
-        //    _attachmentTableDependency.OnChanged += (sender, e) => TableDependency_OnChanged(e, "Attachment");
-        //    _attachmentTableDependency.OnError += TableDependency_OnError;
-        //    _attachmentTableDependency.Start();
-        //}
+        public void AttachmentTableDependency(string connectionString)
+        {
+            _attachmentTableDependency = new SqlTableDependency<Attachment>(connectionString, "Attachments");
+            _attachmentTableDependency.OnChanged += TableDependency_OnChanged;
+            _attachmentTableDependency.OnError += TableDependency_OnError;
+            _attachmentTableDependency.Start();
+        }
 
-        //public void ColumnTableDependency(string connectionString)
-        //{
-        //    _columnTableDependency = new SqlTableDependency<Column>(connectionString, "Columns");
-        //    _columnTableDependency.OnChanged += (sender, e) => TableDependency_OnChanged(e, "Column");
-        //    _columnTableDependency.OnError += TableDependency_OnError;
-        //    _columnTableDependency.Start();
-        //}
+        public void ColumnTableDependency(string connectionString)
+        {
+            _columnTableDependency = new SqlTableDependency<Column>(connectionString, "Columns");
+            _columnTableDependency.OnChanged += TableDependency_OnChanged;
+            _columnTableDependency.OnError += TableDependency_OnError;
+            _columnTableDependency.Start();
+        }
 
         public void NotificationTableDependency(string connectionString)
         {
-            Console.WriteLine("Initializing NotificationTableDependency...");
             _notificationTableDependency = new SqlTableDependency<Notification>(connectionString);
             _notificationTableDependency.OnChanged += TableDependency_OnChanged;
             _notificationTableDependency.OnError += TableDependency_OnError;
             _notificationTableDependency.Start();
-            Console.WriteLine($"NotificationTableDependency: {_notificationTableDependency.Status}");
         }
+
         private void TableDependency_OnError(object sender, TableDependency.SqlClient.Base.EventArgs.ErrorEventArgs e)
         {
-            Console.WriteLine($"{nameof(Notification)} SqlTableDependency error: {e.Error.Message}");
+            Console.WriteLine("ERROR in SqlTableDependency!");
+            Console.WriteLine($"Error Message: {e.Error.Message}");
+
+            if (e.Error.InnerException != null)
+            {
+                Console.WriteLine($"Inner Exception: {e.Error.InnerException.Message}");
+            }
+
+            Console.WriteLine($"Stack Trace: {e.Error.StackTrace}");
+        }
+
+
+        private async void TableDependency_OnChanged(object sender, RecordChangedEventArgs<Card> e)
+        {
+            if (e.ChangeType == TableDependency.SqlClient.Base.Enums.ChangeType.None)
+                return;
+
+            var card = e.Entity;
+            await SendUpdateNotification(card, $"Card '{card.Title}' was updated.", "Card");
+        }
+
+        private async void TableDependency_OnChanged(object sender, RecordChangedEventArgs<Board> e)
+        {
+            if (e.ChangeType == TableDependency.SqlClient.Base.Enums.ChangeType.None)
+                return;
+
+            var board = e.Entity;
+            await SendUpdateNotification(board, $"Board '{board.Title}' was updated.", "Board");
+        }
+
+        private async void TableDependency_OnChanged(object sender, RecordChangedEventArgs<Column> e)
+        {
+            if (e.ChangeType == TableDependency.SqlClient.Base.Enums.ChangeType.None)
+                return;
+
+            var column = e.Entity;
+            await SendUpdateNotification(column, $"Column '{column.Title}' was updated.", "Column");
+        }
+
+        private async void TableDependency_OnChanged(object sender, RecordChangedEventArgs<Attachment> e)
+        {
+            if (e.ChangeType == TableDependency.SqlClient.Base.Enums.ChangeType.None)
+                return;
+
+            var attachment = e.Entity;
+            await SendUpdateNotification(attachment, $"Attachment '{attachment.FileName}' was updated.", "Attachment");
         }
 
         private async void TableDependency_OnChanged(object sender, RecordChangedEventArgs<Notification> e)
         {
-            if (e.ChangeType != TableDependency.SqlClient.Base.Enums.ChangeType.None)
-            {
-                var notification = e.Entity;
-            }
+            if (e.ChangeType == TableDependency.SqlClient.Base.Enums.ChangeType.None)
+                return;
+
+            var notification = e.Entity;
+            await SendUpdateNotification(notification, $"New notification: {notification.Message}", "Notification");
         }
 
-        //private async void TableDependency_OnChanged(object sender, RecordChangedEventArgs<Card> e)
-        //{
-        //    if (e.ChangeType == TableDependency.SqlClient.Base.Enums.ChangeType.None)
-        //        return;
-
-        //    using (var scope = _scopeFactory.CreateScope()) // Create a new DI scope
-        //    {
-        //        var notificationService = scope.ServiceProvider.GetRequiredService<INotificationPersonalService>();
-
-        //        var card = e.Entity;
-
-        //        if (e.EntityOldValues == null) // Check if this is a new entity (Insert)
-        //        {
-        //            var notification = await notificationService.PrNotification($"New Card Added. {card.Title}", card.Title, "Card");
-        //            await _notificationHub.SendNotificationToAll(notification);
-        //        }
-        //    }
-        //}
-        private async void TableDependency_OnChanged(object sender, RecordChangedEventArgs<Card> e)
+        private async Task SendUpdateNotification<TEntity>(TEntity entity, string message, string entityType) where TEntity : class
         {
-            // test
-            if (e.ChangeType != TableDependency.SqlClient.Base.Enums.ChangeType.None)
+            using (var scope = _scopeFactory.CreateScope())
             {
-                var card = e.Entity;
+                var notificationPersonalService = scope.ServiceProvider.GetRequiredService<INotificationPersonalService>();
+                var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+
+                if (entity is BaseEntity baseEntity && baseEntity.CreatedBy.HasValue)
+                {
+                    var userId = baseEntity.CreatedBy.Value; // not null
+                    var user = await userRepository.GetByIdAsync(userId);
+
+                    if (user == null)
+                    {
+                        // Log warning if user is not found
+                        Console.WriteLine($"Warning: User with ID {userId} not found.");
+                        return;
+                    }
+
+                    var entityTypeEnum = Enum.TryParse(entityType, out EntityType parsedEntityType) ? parsedEntityType : EntityType.Unknown;
+
+                    var notification = new Notification
+                    {
+                        EntityId = baseEntity.Id,
+                        EntityType = entityTypeEnum,
+                        Message = message,
+                        MessageType = NotificationType.Update,
+                        IsRead = false,
+                        IsSent = true,
+                        CreatedAt = DateTime.UtcNow,
+                        SpecificEntityChange = $"{entityType} Update",
+                        NotificationCreatedByUser = user 
+                    };
+
+                    await notificationPersonalService.AddNotificationToDatabase(notification);
+
+                    var userIdString = userId.ToString();
+                    if (!string.IsNullOrEmpty(userIdString))
+                    {
+                        await _notificationHub.Clients.User(userIdString).SendAsync("ReceiveNotification", message);
+                    }
+                }
             }
         }
+
 
         public void Dispose()
         {

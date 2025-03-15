@@ -23,9 +23,9 @@ namespace Server.API.Middlewares
             Console.WriteLine("SqlNotificationService retrieved successfully.");
 
             service.CardTableDependency(connectionString);
-            //service.BoardTableDependency(connectionString);
-            //service.AttachmentTableDependency(connectionString);
-            //service.ColumnTableDependency(connectionString);
+            service.BoardTableDependency(connectionString);
+            service.AttachmentTableDependency(connectionString);
+            service.ColumnTableDependency(connectionString);
             service.NotificationTableDependency(connectionString);
         }
     }

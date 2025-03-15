@@ -10,7 +10,6 @@ namespace Server.Domain.Entities
 {
     public class Notification : BaseEntity
     {
-        public Guid UserId { get; set; } // User who receives the notification
 
         public Guid EntityId { get; set; }
 
@@ -27,8 +26,6 @@ namespace Server.Domain.Entities
         public string? SpecificEntityChange { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User NotificationCreatedByUser { get; set; }
     }
 }

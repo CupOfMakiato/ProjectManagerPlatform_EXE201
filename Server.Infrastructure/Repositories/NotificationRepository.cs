@@ -22,7 +22,7 @@ public class NotificationRepository : GenericRepository<Notification>, INotifica
     /// </summary>
     public async Task<List<Notification>> GetUnreadNotificationsAsync(Guid userId)
     {
-        return await _dbSet.Where(n => n.UserId == userId && !n.IsRead)
+        return await _dbSet.Where(n => n.NotificationCreatedByUser.CreatedBy == userId && !n.IsRead)
                            .OrderByDescending(n => n.CreatedAt)
                            .ToListAsync();
     }

@@ -79,7 +79,7 @@ namespace Server.Infrastructure
 
             services.AddSingleton<ISqlNotificationService>(sp =>
             {
-                var hubContext = sp.GetRequiredService<NotificationHub>();
+                var hubContext = sp.GetRequiredService<IHubContext<NotificationHub>>();
                 var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
                 var sqlNotificationService = new SqlNotificationService(serviceScopeFactory, hubContext);
 

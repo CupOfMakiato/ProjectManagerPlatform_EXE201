@@ -161,12 +161,12 @@ namespace Server.Infrastructure.Repositories
         {
             return await _dbContext.Cards
                 .Where(card => card.DueDate.HasValue
-                    && card.Reminder.HasValue
                     && card.Reminder != ReminderType.None
-                    && GetReminderTime(card.DueDate.Value, card.Reminder.Value) <= now
+                    && GetReminderTime(card.DueDate.Value, card.Reminder) <= now
                     && card.DueDate.Value > now) // Ensure it's not overdue
                 .ToListAsync();
         }
+
 
         private static DateTime GetReminderTime(DateTime dueDate, ReminderType reminder)
         {

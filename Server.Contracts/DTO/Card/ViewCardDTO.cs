@@ -19,8 +19,8 @@ namespace Server.Contracts.DTO.Card
         public string Title { get; set; }
         public string? Description { get; set; }
         public List<ViewAttachmentDTO>? Attachments { get; set; } = new List<ViewAttachmentDTO>();
-        public CardStatus? Status { get; set; }
-        public AssignedCompletion? AssignedCompletion { get; set; }
+        public CardStatus Status { get; set; }
+        public AssignedCompletion AssignedCompletion { get; set; }
         public UserDTO? CreatedByUser { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace Server.Domain.Enums
 {
     public enum EntityType
     {
-        Unknown = 0,
+        Unknown = 5,
         Card = 1,
         Board = 2,
         Column = 3,

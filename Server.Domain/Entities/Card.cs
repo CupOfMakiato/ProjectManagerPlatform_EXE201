@@ -14,8 +14,8 @@ namespace Server.Domain.Entities
         public string Title { get; set; }
         public string? Description { get; set; }
         public int CardPosition { get; set; }
-        public CardStatus? Status { get; set; }
-        public AssignedCompletion? AssignedCompletion { get; set; }
+        public CardStatus Status { get; set; }
+        public AssignedCompletion AssignedCompletion { get; set; }
 
         [ForeignKey("ColumnId")]
         public Column Column { get; set; }
@@ -27,7 +27,7 @@ namespace Server.Domain.Entities
 
         public DateTime? DueDate { get; set; } 
         public DateTime? StartDate { get; set; }
-        public ReminderType? Reminder { get; set; } = ReminderType.None;
+        public ReminderType Reminder { get; set; } = ReminderType.None;
 
     }
 }
