@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Server.Infrastructure.Data;
 namespace Server.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250311173940_UpdateCardDueDate")]
+    partial class UpdateCardDueDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,7 +172,6 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -177,7 +179,6 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -194,7 +195,6 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AssignedCompletion")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CardPosition")
@@ -231,14 +231,12 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Reminder")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -356,7 +354,6 @@ namespace Server.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -458,9 +455,12 @@ namespace Server.Infrastructure.Migrations
                     b.Property<string>("SpecificEntityChange")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Notification");
                 });
@@ -713,12 +713,13 @@ namespace Server.Infrastructure.Migrations
 
             modelBuilder.Entity("Server.Domain.Entities.Notification", b =>
                 {
-                    b.HasOne("Server.Domain.Entities.User", "NotificationCreatedByUser")
+                    b.HasOne("Server.Domain.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("NotificationCreatedByUser");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Server.Domain.Entities.SubCategory", b =>

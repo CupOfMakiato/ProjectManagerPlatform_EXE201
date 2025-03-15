@@ -12,7 +12,7 @@ namespace Server.Domain.Entities
     {
         public string Title { get; set; }
         public int CollumnPosition { get; set; }
-        public ColumnStatus? Status { get; set; }
+        public ColumnStatus Status { get; set; }
         [ForeignKey("BoardId")]
         public Guid BoardId { get; set; }
         public Board Board { get; set; }

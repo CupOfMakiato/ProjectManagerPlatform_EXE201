@@ -15,6 +15,8 @@ using Server.Infrastructure.Repositories;
 using Server.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.SignalR;
+using Server.Infrastructure.Hubs;
 
 namespace Server.Infrastructure
 {
@@ -36,6 +38,10 @@ namespace Server.Infrastructure
             services.AddScoped<ICardService, CardService>();
             services.AddScoped<IColumnsService, ColumnService>();
             services.AddScoped<IAttachmentService, AttachmentService>();
+
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<INotificationPersonalService, NotificationPersonalService>();
+
             services.AddScoped<PasswordService>();
             services.AddScoped<OtpService>();
             services.AddScoped<EmailService>();
@@ -53,6 +59,7 @@ namespace Server.Infrastructure
             services.AddScoped<ICardRepository, CardRepository>();
             services.AddScoped<IColumnRepository, ColumsRepository>();
             services.AddScoped<IAttachmentRepository, AttachmentRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             // Cloudinary
             services.Configure<CloudinarySetting>(configuration.GetSection("CloudinarySetting"));
@@ -69,6 +76,18 @@ namespace Server.Infrastructure
             services.AddSingleton<IConnectionMultiplexer>(sp =>
                 ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)
             );
+
+            services.AddSingleton<ISqlNotificationService>(sp =>
+            {
+                var hubContext = sp.GetRequiredService<IHubContext<NotificationHub>>();
+                var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                var sqlNotificationService = new SqlNotificationService(serviceScopeFactory, hubContext);
+
+                return sqlNotificationService;
+            });
+
+
+
             return services;
         }
     }

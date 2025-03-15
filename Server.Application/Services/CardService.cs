@@ -15,9 +15,11 @@ using Server.Domain.Entities;
 using Server.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Server.Application.Services
 {
@@ -599,9 +601,65 @@ namespace Server.Application.Services
             };
         }
 
+        public async Task<Result<object>> AddDueDateToCard(AddDueDateToCardDTO addDueDateDTO)
+        {
+            var card = await _unitOfWork.cardRepository.GetCardById(addDueDateDTO.CardId);
+            if (card == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Card not found",
+                    Data = null
+                };
+            }
+
+            // Ensure DueDate is in the future
+            if (addDueDateDTO.DueDate < DateTime.UtcNow)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Due date must be in the future",
+                    Data = null
+                };
+            }
+
+            // Convert StartDate (DateOnly) to DateTime manually
+            if (addDueDateDTO.StartDate.HasValue)
+            {
+                card.StartDate = new DateTime(
+                    addDueDateDTO.StartDate.Value.Year,
+                    addDueDateDTO.StartDate.Value.Month,
+                    addDueDateDTO.StartDate.Value.Day,
+                    0, 0, 0, DateTimeKind.Utc 
+                );
+            }
+
+            // Store DueDate with both date & time in UTC
+            card.DueDate = DateTime.SpecifyKind(addDueDateDTO.DueDate, DateTimeKind.Utc);
+
+            // Assign Reminder
+            card.Reminder = addDueDateDTO.Reminder;
+
+            _unitOfWork.cardRepository.Update(card);
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0 ? "Due date added successfully" : "Failed to add due date",
+                Data = new
+                {
+                    addDueDateDTO.CardId,
+                    StartDate = card.StartDate?.ToString("yyyy-MM-dd"), 
+                    DueDate = card.DueDate?.ToString("yyyy-MM-dd HH:mm"), 
+                    Reminder = card.Reminder
+                }
+            };
+        }
 
 
-        
 
     }
 }

@@ -30,6 +30,10 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //modelBuilder.Entity<Card>().ToTable(tb => tb.HasTrigger("tr_dbo_Cards_c911da69-90fc-495a-b8f7-ef8ef61780e1_Sender"));
+        //modelBuilder.Entity<Board>().ToTable(tb => tb.HasTrigger("TriggerName"));
+        //modelBuilder.Entity<Attachment>().ToTable(tb => tb.HasTrigger("TriggerName"));
+        //modelBuilder.Entity<Notification>().ToTable(tb => tb.HasTrigger("TriggerName"));
 
         modelBuilder.Entity<Role>().HasData(
            new Role { Id = 1, RoleName = "Admin" },
@@ -77,6 +81,10 @@ public class AppDbContext : DbContext
             .HasConversion(v => v.ToString(), v => (AssignedCompletion)Enum.Parse(typeof(AssignedCompletion), v));
 
         modelBuilder.Entity<Card>()
+            .Property(s => s.Reminder)
+            .HasConversion(v => v.ToString(), v => (ReminderType)Enum.Parse(typeof(ReminderType), v));
+
+        modelBuilder.Entity<Card>()
             .HasOne(c => c.CardCreatedByUser)
             .WithMany()
             .HasForeignKey(c => c.CreatedBy)
@@ -87,5 +95,19 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(a => a.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Notification>()
+            .Property(s => s.EntityType)
+            .HasConversion(v => v.ToString(), v => (EntityType)Enum.Parse(typeof(EntityType), v));
+
+        modelBuilder.Entity<Notification>()
+            .Property(s => s.MessageType)
+            .HasConversion(v => v.ToString(), v => (NotificationType)Enum.Parse(typeof(NotificationType), v));
+
+        modelBuilder.Entity<Notification>()
+            .HasOne(c => c.NotificationCreatedByUser)
+            .WithMany()
+            .HasForeignKey(c => c.CreatedBy)
+            .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
     }
 }

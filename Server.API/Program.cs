@@ -2,18 +2,21 @@
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Server.API;
 using Server.API.Middlewares;
 using Server.Application;
+using Server.Application.Interfaces;
 using Server.Infrastructure;
+using Server.Infrastructure.Hubs;
+using Server.Infrastructure.Services;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 
 
@@ -76,7 +79,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
     });
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
@@ -106,6 +108,7 @@ builder.Services.AddHttpClient();
 
 
 var app = builder.Build();
+
 
 app.UseSwagger();
 
@@ -145,5 +148,9 @@ app.UseAuthorization();
 // Use Global Exception Middleware 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.MapControllers();
+
+app.MapHub<NotificationHub>("hub/notificationHub");
+app.UseSqlTableDependency(builder.Configuration.GetConnectionString("DefaultConnection"));
+
 
 app.Run();

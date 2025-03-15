@@ -3,6 +3,7 @@ using Server.API.Middlewares;
 using Server.API.Services;
 using Server.Application.Interfaces;
 using Server.Domain.Enums;
+using Server.Infrastructure.Hubs;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -28,7 +29,10 @@ namespace Server.API
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<GlobalExceptionMiddleware>();
             services.AddScoped<Stopwatch>();
+            services.AddScoped<NotificationHub>();
             services.AddScoped<PerformanceMiddleware>();
+
+            services.AddSingleton<NotificationHub>();
             services.AddHttpContextAccessor();
             services.AddControllersWithViews();
             services.AddSwaggerGen(c =>

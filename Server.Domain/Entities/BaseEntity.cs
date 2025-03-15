@@ -1,4 +1,5 @@
-﻿namespace Server.Domain.Entities
+﻿
+namespace Server.Domain.Entities
 {
     public abstract class BaseEntity
     {
