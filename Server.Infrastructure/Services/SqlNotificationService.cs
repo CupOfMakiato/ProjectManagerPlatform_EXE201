@@ -129,8 +129,14 @@ namespace Server.Infrastructure.Services
                 return;
 
             var notification = e.Entity;
-            await SendUpdateNotification(notification, $"New notification: {notification.Message}", "Notification");
+
+            var userIdString = notification.NotificationCreatedByUser?.Id.ToString();
+            if (!string.IsNullOrEmpty(userIdString))
+            {
+                await _notificationHub.Clients.User(userIdString).SendAsync("ReceiveNotification", notification.Message);
+            }
         }
+
 
         private async Task SendUpdateNotification<TEntity>(TEntity entity, string message, string entityType) where TEntity : class
         {
