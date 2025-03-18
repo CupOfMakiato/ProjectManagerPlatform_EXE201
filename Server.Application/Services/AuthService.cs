@@ -48,26 +48,13 @@ namespace Server.Application.Services
             _redisService = redisService;
         }
 
+
+        // NEVER USER REDIS HERE :)
         public async Task<Authenticator> LoginAsync(LoginDTO loginDTO)
         {
             try
             {
-                string cacheKey = $"user_{loginDTO.Email}";
-
-                // Try to get user from Redis cache
-                var user = await _redisService.GetAsync<User>(cacheKey);
-
-                if (user == null)
-                {
-                    // Fetch user from database if not cached
-                    user = await _userRepository.GetUserByEmail(loginDTO.Email);
-
-                    if (user != null)
-                    {
-                        // Store user data in Redis for 30 minutes
-                        await _redisService.SetAsync(cacheKey, user, TimeSpan.FromMinutes(30));
-                    }
-                }
+                var user = await _userRepository.GetUserByEmail(loginDTO.Email);
 
                 if (user == null)
                 {
@@ -80,7 +67,7 @@ namespace Server.Application.Services
                 }
                 if (user.Status.ToString() != "Active")
                 {
-                    throw new InvalidOperationException("Your account has been locked. Contact support.");
+                    throw new InvalidOperationException("Your account has been lock. Contact to website to solve it.");
                 }
                 if (!BCrypt.Net.BCrypt.Verify(loginDTO.PasswordHash, user.PasswordHash))
                 {
@@ -89,29 +76,30 @@ namespace Server.Application.Services
 
                 // Generate JWT token
                 var token = await GenerateJwtToken(user);
-
                 return token;
             }
             catch (KeyNotFoundException ex)
             {
-                Console.WriteLine($"[ERROR] {ex.Message}");
-                throw;
+                // Handle cases where the user is not found
+                throw new ApplicationException("Invalid email or account does not exist.", ex);
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"[ERROR] {ex.Message}");
-                throw;
+                // Handle cases where the account is not verified
+                throw new ApplicationException("Account is not activated. Please verify your email.", ex);
             }
             catch (UnauthorizedAccessException ex)
             {
-                Console.WriteLine($"[ERROR] {ex.Message}");
-                throw;
+                // Handle cases where the password is invalid
+                throw new ApplicationException("Invalid password.", ex);
             }
             catch (Exception ex)
             {
+                // General exception handling
                 throw new ApplicationException("An error occurred during login.", ex);
             }
         }
+
 
         public async Task<Authenticator> AuthenticateGoogleUserAsync(GoogleUserRequest request)
         {
