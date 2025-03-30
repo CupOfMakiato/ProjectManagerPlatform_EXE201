@@ -24,7 +24,11 @@ public class AppDbContext : DbContext
     public DbSet<Attachment> Attachments { get; set; }
     public DbSet<Activity> Activities { get; set; }
     public DbSet<Label> Labels { get; set; }
-    public DbSet<Checklist> Checklists{ get; set; }
+    public DbSet<Checklist> Checklists { get; set; }
+    public DbSet<Subcription> Subcriptions { get; set; }
+    public DbSet<Notification> Notification { get; set; }
+    public DbSet<Subcribe> Subcribes { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
     #endregion
 
@@ -106,6 +110,16 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Notification>()
             .HasOne(c => c.NotificationCreatedByUser)
+            .WithMany()
+            .HasForeignKey(c => c.CreatedBy)
+            .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
+
+        modelBuilder.Entity<Subcription>()
+            .Property(s => s.SubcriptionName)
+            .HasConversion(v => v.ToString(), v => (SubcriptionType)Enum.Parse(typeof(SubcriptionType), v));
+
+        modelBuilder.Entity<Subcription>()
+            .HasOne(c => c.SubcriptionCreatedBy)
             .WithMany()
             .HasForeignKey(c => c.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict); // Change from Cascade to Restrict
