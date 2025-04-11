@@ -11,11 +11,14 @@ namespace Server.Application.Repositories
     public interface IBoardRepository : IGenericRepository<Board>
     {
         Task<List<Board>> GetBoardsAsync();
-        Task<List<Board>> GetAllOpenBoards();
-        Task<List<Board>> GetAllClosedBoards();
+        Task<List<Board>> GetAllOpenBoards(Guid userId);
+        Task<List<Board>> GetAllClosedBoards(Guid userId);
         Task<int> GetTotalBoardCount(BoardStatus? status = null);
         Task<Board> GetBoardById(Guid id);
         Task<List<Board>> GetPagedBoards(int pageIndex, int pageSize, BoardStatus? status = null);
-        Task<List<Board>> SearchBoardsAsync(string textSearch);
+        Task<List<Board>> SearchBoardsAsync(string textSearch, Guid userId);
+        Task<List<Board>> GetAllClosedBoardsCreatedByUser(Guid userId);
+        Task<List<Board>> GetAllOpenBoardsCreatedByUser(Guid userId);
+        Task<List<Board>> GetPagedBoardsCreatedByUser(Guid userId, int pageIndex, int pageSize, BoardStatus? status = null);
     }
 }

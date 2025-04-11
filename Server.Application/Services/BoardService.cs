@@ -74,10 +74,10 @@ namespace Server.Application.Services
         //}
 
         // Remove Redis caching
-        public async Task<Pagination<ViewBoardDTO>> ViewAllBoardsPagin(int pageIndex, int pageSize)
+        public async Task<Pagination<ViewBoardDTO>> ViewAllBoardsPagin(Guid userId, int pageIndex, int pageSize)
         {
             var totalItemsCount = await _unitOfWork.boardRepository.GetTotalBoardCount(BoardStatus.Open);
-            var services = await _unitOfWork.boardRepository.GetPagedBoards(pageIndex, pageSize, BoardStatus.Open);
+            var services = await _unitOfWork.boardRepository.GetPagedBoardsCreatedByUser(userId, pageIndex, pageSize, BoardStatus.Open);
             var mappedBoards = _mapper.Map<List<ViewBoardDTO>>(services);
 
             return new Pagination<ViewBoardDTO>
@@ -90,10 +90,10 @@ namespace Server.Application.Services
         }
 
 
-        public async Task<Pagination<ViewBoardDTO>> ViewAllClosedBoardsPagin(int pageIndex, int pageSize)
+        public async Task<Pagination<ViewBoardDTO>> ViewAllClosedBoardsPagin(Guid userId, int pageIndex, int pageSize)
         {
             var totalItemsCount = await _unitOfWork.boardRepository.GetTotalBoardCount(BoardStatus.Closed);
-            var closedBoards = await _unitOfWork.boardRepository.GetPagedBoards(pageIndex, pageSize, BoardStatus.Closed);
+            var closedBoards = await _unitOfWork.boardRepository.GetPagedBoardsCreatedByUser(userId, pageIndex, pageSize, BoardStatus.Closed);
             var mappedBoards = _mapper.Map<List<ViewBoardDTO>>(closedBoards);
 
             return new Pagination<ViewBoardDTO>
@@ -105,9 +105,9 @@ namespace Server.Application.Services
             };
         }
 
-        public async Task<Result<object>> ViewAllOpenBoards()
+        public async Task<Result<object>> ViewAllOpenBoards(Guid userId)
         {
-            var boards = await _unitOfWork.boardRepository.GetAllOpenBoards();
+            var boards = await _unitOfWork.boardRepository.GetAllOpenBoards(userId);
             var result = boards.Select(board => board.ToViewBoardDTO()).ToList();
             return new Result<object>
             {
@@ -117,9 +117,9 @@ namespace Server.Application.Services
             };
         }
 
-        public async Task<Result<object>> ViewAllClosedBoards()
+        public async Task<Result<object>> ViewAllClosedBoards(Guid userId)
         {
-            var boards = await _unitOfWork.boardRepository.GetAllClosedBoards();
+            var boards = await _unitOfWork.boardRepository.GetAllClosedBoards(userId);
             var result = boards.Select(board => board.ToViewBoardDTO()).ToList();
             return new Result<object>
             {
