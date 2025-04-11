@@ -29,14 +29,17 @@ namespace Server.API.Controllers
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
         private readonly HttpClient _httpClient;
+        private readonly IGoogleService _googleService;
 
-        public AuthController(PasswordService passwordService, IAuthService authService, IUserService userService, IEmailService emailService, HttpClient httpClient)
+
+        public AuthController(PasswordService passwordService, IAuthService authService, IUserService userService, IEmailService emailService, HttpClient httpClient, IGoogleService googleService)
         {
             _passwordService = passwordService;
             _authService = authService;
             _userService = userService;
             _emailService = emailService;
             _httpClient = httpClient;
+            _googleService = googleService;
         }
 
         [HttpPost("user/login")]
@@ -78,6 +81,43 @@ namespace Server.API.Controllers
         }
 
 
+        /*        [HttpPost("google-login")]
+                public async Task<IActionResult> LoginWithGoogle([FromBody] GoogleUserRequest request)
+                {
+                    if (request == null || string.IsNullOrEmpty(request.IdToken))
+                    {
+                        return BadRequest("Invalid request data.");
+                    }
+
+                    try
+                    {
+                        var result = await _authService.AuthenticateGoogleUserAsync(request);
+                        return Ok(result);
+                    }
+                    catch (ApplicationException ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(500, "An internal error occurred.");
+                    }
+                }    */
+
+        [HttpGet("get-url-google-login")]
+        public async Task<IActionResult> GetUrlLoginGoogle()
+        {
+            var result = await _googleService.GetUrlLoginWithGoogle();
+            return Ok(result);
+        }
+
+        [HttpGet("callback")]
+        public async Task<IActionResult> CallbackLoginGoogle([FromQuery] string code)
+        {
+            var result = await _googleService.GoogleCallback(code);
+            return Content(result, "application/json");
+        }
+
         [HttpPost("google-login")]
         public async Task<IActionResult> LoginWithGoogle([FromBody] GoogleUserRequest request)
         {
@@ -88,18 +128,53 @@ namespace Server.API.Controllers
 
             try
             {
-                var result = await _authService.AuthenticateGoogleUserAsync(request);
-                return Ok(result);
-            }
-            catch (ApplicationException ex)
-            {
-                return BadRequest(ex.Message);
+                var token = await _googleService.AuthenticateGoogleUserAsync(request);
+                if (token.Code == 1)
+                {
+                    return BadRequest(token.Error);
+                }
+                Response.Cookies.Append("refreshToken", token.RefreshToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Path = "/",
+                    SameSite = SameSiteMode.Strict,
+                });
+                return Ok(new Result<object>
+                {
+                    Error = 0,
+                    Message = "Success",
+                    Data = new
+                    {
+                        TokenType = "Bearer",
+                        token.AccessToken,
+                    }
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An internal error occurred.");
+                return BadRequest(new { ex.Message });
             }
-        }    
+        }
+
+        [HttpPost("register-google")]
+        public async Task<IActionResult> RegisterWithGoogle([FromBody] GoogleUserRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.IdToken))
+            {
+                return BadRequest("Invalid request data.");
+            }
+
+            try
+            {
+                var result = await _googleService.RegisterWithGoogle(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
 
         [HttpPost("token/refresh")]
         public async Task<IActionResult> RefreshToken(string token)
