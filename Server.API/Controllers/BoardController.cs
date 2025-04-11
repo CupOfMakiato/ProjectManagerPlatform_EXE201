@@ -29,9 +29,9 @@ namespace Server.API.Controllers
         [HttpGet("ViewAllBoardsPagin")]
         [ProducesResponseType(200, Type = typeof(ViewBoardDTO))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
-        public async Task<IActionResult> ViewAllBoardsPagin(int pageIndex = 0, int pageSize = 10)
+        public async Task<IActionResult> ViewAllBoardsPagin(Guid userId, int pageIndex = 0, int pageSize = 10)
         {
-            var board = await _boardService.ViewAllBoardsPagin(pageIndex, pageSize);
+            var board = await _boardService.ViewAllBoardsPagin(userId, pageIndex, pageSize);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -79,9 +79,9 @@ namespace Server.API.Controllers
         [HttpGet("ViewAllClosedBoardsPagin")]
         [ProducesResponseType(200, Type = typeof(Pagination<ViewBoardDTO>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
-        public async Task<IActionResult> ViewAllClosedBoardsPagin(int pageIndex = 0, int pageSize = 10)
+        public async Task<IActionResult> ViewAllClosedBoardsPagin(Guid userId, int pageIndex = 0, int pageSize = 10)
         {
-            var closedBoards = await _boardService.ViewAllClosedBoardsPagin(pageIndex, pageSize);
+            var closedBoards = await _boardService.ViewAllClosedBoardsPagin(userId, pageIndex, pageSize);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -92,9 +92,9 @@ namespace Server.API.Controllers
         [HttpGet("ViewAllOpenBoards")]
         [ProducesResponseType(200, Type = typeof(ViewBoardDTO))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
-        public async Task<IActionResult> ViewAllOpenBoards()
+        public async Task<IActionResult> ViewAllOpenBoards(Guid userId)
         {
-            var board = await _boardService.ViewAllOpenBoards();
+            var board = await _boardService.ViewAllOpenBoards(userId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -104,9 +104,9 @@ namespace Server.API.Controllers
         [HttpGet("ViewAllClosedBoards")]
         [ProducesResponseType(200, Type = typeof(ViewBoardDTO))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
-        public async Task<IActionResult> ViewAllClosedBoards()
+        public async Task<IActionResult> ViewAllClosedBoards(Guid userId)
         {
-            var board = await _boardService.ViewAllClosedBoards();
+            var board = await _boardService.ViewAllClosedBoards(userId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

@@ -19,6 +19,7 @@ namespace Server.Application
         IColumnRepository columnRepository { get; }
         IAttachmentRepository attachmentRepository { get; }
         INotificationRepository notificationRepository { get; }
+        ISubcriptionRepository subcriptionRepository { get; }
 
 
         public Task<int> SaveChangeAsync();

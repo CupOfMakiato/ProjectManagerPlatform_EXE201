@@ -12,11 +12,11 @@ namespace Server.Application.Interfaces
     public interface IBoardService
     {
         // View 
-        Task<Pagination<ViewBoardDTO>> ViewAllBoardsPagin(int pageIndex, int pageSize);
-        Task<Pagination<ViewBoardDTO>> ViewAllClosedBoardsPagin(int pageIndex, int pageSize);
+        Task<Pagination<ViewBoardDTO>> ViewAllBoardsPagin(Guid userId, int pageIndex, int pageSize);
+        Task<Pagination<ViewBoardDTO>> ViewAllClosedBoardsPagin(Guid userId, int pageIndex, int pageSize);
         Task<Result<object>> ViewBoardById(Guid serviceId);
-        Task<Result<object>> ViewAllOpenBoards();
-        Task<Result<object>> ViewAllClosedBoards();
+        Task<Result<object>> ViewAllOpenBoards(Guid userId);
+        Task<Result<object>> ViewAllClosedBoards(Guid userId);
 
 
         // Add

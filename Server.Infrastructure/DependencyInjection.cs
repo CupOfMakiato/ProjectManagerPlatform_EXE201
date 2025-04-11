@@ -38,6 +38,7 @@ namespace Server.Infrastructure
             services.AddScoped<ICardService, CardService>();
             services.AddScoped<IColumnsService, ColumnService>();
             services.AddScoped<IAttachmentService, AttachmentService>();
+            services.AddScoped<ISubcriptionService, SubcriptionService>();
 
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<INotificationPersonalService, NotificationPersonalService>();
@@ -60,6 +61,7 @@ namespace Server.Infrastructure
             services.AddScoped<IColumnRepository, ColumsRepository>();
             services.AddScoped<IAttachmentRepository, AttachmentRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<ISubcriptionRepository, SubcriptionRepository>();
 
             // Cloudinary
             services.Configure<CloudinarySetting>(configuration.GetSection("CloudinarySetting"));
@@ -73,9 +75,9 @@ namespace Server.Infrastructure
             );
 
             // Redis
-            services.AddSingleton<IConnectionMultiplexer>(sp =>
-                ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)
-            );
+            //services.AddSingleton<IConnectionMultiplexer>(sp =>
+            //    ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)
+            //);
 
             services.AddSingleton<ISqlNotificationService>(sp =>
             {
