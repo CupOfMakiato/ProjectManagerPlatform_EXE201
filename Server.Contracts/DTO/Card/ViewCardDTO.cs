@@ -18,6 +18,7 @@ namespace Server.Contracts.DTO.Card
         public ViewColumnDTO Column { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
+        public int CardPosition { get; set; }
         public List<ViewAttachmentDTO>? Attachments { get; set; } = new List<ViewAttachmentDTO>();
         public CardStatus Status { get; set; }
         public AssignedCompletion AssignedCompletion { get; set; }

@@ -24,6 +24,7 @@ namespace Server.Application.Mappers.CardExtension
                 Id = card.Id,
                 Title = card.Title,
                 Description = card.Description,
+                CardPosition = card.CardPosition,
                 Column = card.Column.ToViewColumnDTO(),
                 Attachments = card.Attachments.Select(a => a.ToViewAttachmentDTO()).ToList(),
                 Status = (Domain.Enums.CardStatus)card.Status,
