@@ -21,6 +21,7 @@ namespace Server.Application.Interfaces
         Task<Result<object>> UnarchiveCard(Guid cardId);
         Task<Result<object>> ArchiveCard(Guid cardId);
 
+
         // Create Cards
         Task<Result<object>> AddANewCard(AddCardDTO addCardDTO);
 

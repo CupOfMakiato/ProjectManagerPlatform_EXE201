@@ -320,7 +320,7 @@ namespace Server.Application.Services
             };
         }
 
-        public async Task<Result<object>> ViewAllCardsFromABoard(Guid boardId)
+        public async Task<Result<object>> ViewArchivedCardsFromABoard(Guid boardId)
         {
             // Check if the board exists
             var existingBoard = await _unitOfWork.boardRepository.GetByIdAsync(boardId);
@@ -333,7 +333,7 @@ namespace Server.Application.Services
                     Data = null
                 };
             }
-            var openCards = await _unitOfWork.cardRepository.GetCardsByBoardId(boardId);
+            var openCards = await _unitOfWork.cardRepository.GetArchivedCardsByBoardId(boardId);
 
             var mappedCards = _mapper.Map<List<ViewCardDTO>>(openCards);
 

@@ -160,6 +160,8 @@ namespace Server.Application.Services
             };
         }
 
+
+
         public async Task<Result<object>> ViewCardById(Guid cardId)
         {
             ViewCardDTO result = null;

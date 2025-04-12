@@ -40,7 +40,21 @@ namespace Server.Infrastructure.Repositories
         {
             return await _dbContext.Columns
                 .Include(c => c.Board)
-                .Include (c => c.ColumnCreatedByUser)
+                .Include(c => c.ColumnCreatedByUser)
+                .Where(c => !c.IsDeleted)
+                .Where(c => c.Status == ColumnStatus.Open)
+                .Where(c => c.BoardId == boardId)
+                .OrderBy(c => c.CollumnPosition)
+                .ToListAsync();
+        }
+
+        public async Task<List<Column>> GetArchivedColumnByBoardId(Guid boardId)
+        {
+            return await _dbContext.Columns
+                .Include(c => c.Board)
+                .Include(c => c.ColumnCreatedByUser)
+                .Where(c => !c.IsDeleted)
+                .Where(c => c.Status == ColumnStatus.Closed)
                 .Where(c => c.BoardId == boardId)
                 .OrderBy(c => c.CollumnPosition)
                 .ToListAsync();

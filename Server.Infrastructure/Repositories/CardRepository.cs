@@ -89,6 +89,19 @@ namespace Server.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Card>> GetArchivedCardsByBoardId(Guid boardId)
+        {
+            return await _dbContext.Cards
+                .Include(c => c.Column) // Include Column to access BoardId
+                .ThenInclude(col => col.Board) // Include Board for verification
+                .Include(c => c.Attachments)
+                .Where(c => c.Status == CardStatus.Closed)
+                .Where(c => !c.IsDeleted && c.Column.BoardId == boardId) // Filter by boardId
+                .OrderByDescending(c => c.ModificationDate) // Sort by last update
+                .Include(s => s.CardCreatedByUser)
+                .ToListAsync();
+        }
+
 
         public async Task<Card?> GetCardById(Guid id)
         {

@@ -68,6 +68,32 @@ namespace Server.API.Controllers
             return Ok(columns);
         }
 
+        [HttpGet("ViewArchivedColumnsByBoardId/{boardId}")]
+        [ProducesResponseType(200, Type = typeof(ViewColumnDTO))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ViewArchivedColumnsByBoardId(Guid boardId)
+        {
+            var columns = await _columnsService.ViewArchivedColumnsByBoardId(boardId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(columns);
+        }
+
+        [HttpGet("ViewAllCardsFromColumn/{columnId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ViewAllCardsFromColumn(Guid columnId)
+        {
+            var result = await _columnsService.ViewAllCardsFromAColumn(columnId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(result);
+        }
+
         [HttpPost("AddNewColumn")]
         [ProducesResponseType(200, Type = typeof(Result<object>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
@@ -121,6 +147,19 @@ namespace Server.API.Controllers
         public async Task<IActionResult> CopyColumn([FromForm] CopyColumn copyColumn)
         {
             var result = await _columnsService.CopyColumn(copyColumn);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(result);
+        }
+
+        [HttpPut("ArchiveAllCardsInColumn/{columnId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ArchiveAllCardsInColumn(Guid columnId)
+        {
+            var result = await _columnsService.ArchiveAllCardsInColumn(columnId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

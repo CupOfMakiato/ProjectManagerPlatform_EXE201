@@ -113,7 +113,7 @@ namespace Server.API.Controllers
             return Ok(board);
         }
 
-        [HttpPost("ArchiveBoard/{boardId}")]
+        [HttpPut("ArchiveBoard/{boardId}")]
         [ProducesResponseType(200, Type = typeof(Result<object>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
         public async Task<IActionResult> ArchiveBoard(Guid boardId)
@@ -126,7 +126,7 @@ namespace Server.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("UnarchiveBoard/{boardId}")]
+        [HttpPut("UnarchiveBoard/{boardId}")]
         [ProducesResponseType(200, Type = typeof(Result<object>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
         public async Task<IActionResult> UnarchiveBoard(Guid boardId)
@@ -139,7 +139,7 @@ namespace Server.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("UpdateBoard")]
+        [HttpPut("UpdateBoard")]
         [ProducesResponseType(200, Type = typeof(Result<object>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
         public async Task<IActionResult> UpdateBoard([FromForm] UpdateBoardRequest req)
@@ -163,7 +163,7 @@ namespace Server.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("ChangeBoardName")]
+        [HttpPut("ChangeBoardName")]
         [ProducesResponseType(200, Type = typeof(Result<object>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
         public async Task<IActionResult> ChangeBoardName([FromForm] ChangeBoardNameRequest req)
@@ -200,12 +200,12 @@ namespace Server.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("ViewAllCardsFromABoard/{boardId}")]
+        [HttpGet("ViewArchivedCardsFromABoard/{boardId}")]
         [ProducesResponseType(200, Type = typeof(Result<object>))]
         [ProducesResponseType(400, Type = typeof(Result<object>))]
         public async Task<IActionResult> ViewAllCardsFromABoard(Guid boardId)
         {
-            var result = await _boardService.ViewAllCardsFromABoard(boardId);
+            var result = await _boardService.ViewArchivedCardsFromABoard(boardId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

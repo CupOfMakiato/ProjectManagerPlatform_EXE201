@@ -19,6 +19,7 @@ namespace Server.Application.Repositories
         Task<List<Card>> GetPagedCards(int pageIndex, int pageSize, CardStatus? status = null);
         Task<List<Card>> SearchCardsAsync(string textSearch);
         Task<List<Card>> GetCardsByBoardId(Guid boardId);
+        Task<List<Card>> GetArchivedCardsByBoardId(Guid boardId);
         Task<List<Card>> GetCardsByColumnId(Guid columnId);
         Task<List<Card>> GetOpenCardsByColumnId(Guid columnId);
         Task<List<Card>> GetArchivedCardsByColumnId(Guid columnId);
