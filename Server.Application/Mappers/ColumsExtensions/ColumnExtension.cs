@@ -22,6 +22,7 @@ namespace Server.Application.Mappers.ColumsExtensions
             {
                 Id = column.Id,
                 Title = column.Title,
+                CollumnPosition = column.CollumnPosition,
                 Status = (Domain.Enums.ColumnStatus)column.Status,
                 CreatedByUser = column.ColumnCreatedByUser.ToUserDTO(),
                 Board = column.Board.ToViewBoardDTO()
