@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Server.Domain.Entities;
 using Server.Domain.Enums;
+using System.Reflection.Metadata;
 
 namespace Server.Infrastructure.Data;
 
@@ -31,13 +32,20 @@ public class AppDbContext : DbContext
     public DbSet<Payment> Payments { get; set; }
 
     #endregion
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //modelBuilder.Entity<Card>().ToTable(tb => tb.HasTrigger("tr_dbo_Cards_c911da69-90fc-495a-b8f7-ef8ef61780e1_Sender"));
-        //modelBuilder.Entity<Board>().ToTable(tb => tb.HasTrigger("TriggerName"));
-        //modelBuilder.Entity<Attachment>().ToTable(tb => tb.HasTrigger("TriggerName"));
-        //modelBuilder.Entity<Notification>().ToTable(tb => tb.HasTrigger("TriggerName"));
+        modelBuilder.Entity<Card>()
+        .ToTable(tb => tb.UseSqlOutputClause(false));
+        modelBuilder.Entity<Board>()
+        .ToTable(tb => tb.UseSqlOutputClause(false));
+        modelBuilder.Entity<Attachment>()
+        .ToTable(tb => tb.UseSqlOutputClause(false));
+        modelBuilder.Entity<Column>()
+        .ToTable(tb => tb.UseSqlOutputClause(false));
+        modelBuilder.Entity<Notification>()
+        .ToTable(tb => tb.UseSqlOutputClause(false));
 
         modelBuilder.Entity<Role>().HasData(
            new Role { Id = 1, RoleName = "Admin" },

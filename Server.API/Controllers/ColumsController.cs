@@ -166,5 +166,31 @@ namespace Server.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut("UnarchiveColumn/{columnId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> UnarchiveColumn(Guid columnId)
+        {
+            var result = await _columnsService.UnarchiveColumn(columnId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(result);
+        }
+
+        [HttpPut("ArchiveColumn/{columnId}")]
+        [ProducesResponseType(200, Type = typeof(Result<object>))]
+        [ProducesResponseType(400, Type = typeof(Result<object>))]
+        public async Task<IActionResult> ArchiveColumn(Guid columnId)
+        {
+            var result = await _columnsService.ArchiveColumn(columnId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(result);
+        }
     }
 }
