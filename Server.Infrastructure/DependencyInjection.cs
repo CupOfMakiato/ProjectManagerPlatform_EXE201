@@ -65,6 +65,7 @@ namespace Server.Infrastructure
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<ISubcriptionRepository, SubcriptionRepository>();
             services.AddScoped<ISubcribeRepository, SubcribeRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
 
             // Cloudinary
             services.Configure<CloudinarySetting>(configuration.GetSection("CloudinarySetting"));

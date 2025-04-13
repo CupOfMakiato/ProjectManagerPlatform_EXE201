@@ -21,7 +21,7 @@ namespace Server.Application
         INotificationRepository notificationRepository { get; }
         ISubcriptionRepository subcriptionRepository { get; }
         ISubcribeRepository subcribeRepository { get; }
-
+        IPaymentRepository paymentRepository { get; }
 
         public Task<int> SaveChangeAsync();
     }

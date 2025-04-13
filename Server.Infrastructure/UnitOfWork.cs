@@ -25,6 +25,7 @@ namespace Server.Infrastructure
         private readonly INotificationRepository _notificationRepository;
         private readonly ISubcriptionRepository _subcriptionRepository;
         private readonly ISubcribeRepository _subcribeRepository;
+        private readonly IPaymentRepository _paymentRepository;
 
 
 
@@ -33,7 +34,7 @@ namespace Server.Infrastructure
         public UnitOfWork(AppDbContext dbContext, ISubCategoryRepository subCategoryRepository, ICategoryRepository categoryRepository,
             IAuthRepository authRepository, IUserRepository userRepository, IBoardRepository boardRepository, ICardRepository cardRepository,
             IColumnRepository columnRepository, IAttachmentRepository attachmentRepository, INotificationRepository notificationRepository,
-            ISubcriptionRepository subcriptionRepository, ISubcribeRepository subcribeRepository)
+            ISubcriptionRepository subcriptionRepository, ISubcribeRepository subcribeRepository, IPaymentRepository paymentRepository)
         {
             _dbContext = dbContext;
             _subCategoryRepository = subCategoryRepository;
@@ -47,6 +48,7 @@ namespace Server.Infrastructure
             _notificationRepository = notificationRepository;
             _subcriptionRepository = subcriptionRepository;
             _subcribeRepository = subcribeRepository;
+            _paymentRepository = paymentRepository;
         }
 
         public ICategoryRepository categoryRepository => _categoryRepository;
@@ -61,6 +63,7 @@ namespace Server.Infrastructure
         public INotificationRepository notificationRepository => _notificationRepository;
         public ISubcriptionRepository subcriptionRepository => _subcriptionRepository;
         public ISubcribeRepository subcribeRepository => _subcribeRepository;
+        public IPaymentRepository paymentRepository => _paymentRepository;
 
 
         public async Task<int> SaveChangeAsync()

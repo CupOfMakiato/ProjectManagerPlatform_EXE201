@@ -18,6 +18,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Server.Contracts.Abstractions.Shared;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace Server.Infrastructure.Services
 {
@@ -69,7 +70,9 @@ namespace Server.Infrastructure.Services
             );
             _memoryCache.Set($"SUBCRIPTION_{code}", createPaymentRequest.SubcriptionId, TimeSpan.FromMinutes(30));
             _memoryCache.Set($"USER_{code}", createPaymentRequest.UserId, TimeSpan.FromMinutes(30));
+            _memoryCache.Set($"PRICE_{code}", paymentData.amount, TimeSpan.FromMinutes(30));
             var response = await _payOS.createPaymentLink(paymentData);
+            _memoryCache.Set($"CHECKOUTURL_{code}", response.checkoutUrl, TimeSpan.FromMinutes(30));
             return response.checkoutUrl;
         }
 
@@ -77,8 +80,7 @@ namespace Server.Infrastructure.Services
         {
             var paymentStatus = await _payOS.getPaymentLinkInformation(orderCode);
 
-            if (_memoryCache.TryGetValue($"SUBCRIPTION_{orderCode}", out Guid subcriptionId) &&
-                _memoryCache.TryGetValue($"USER_{orderCode}", out Guid userId))
+            if (_memoryCache.TryGetValue($"SUBCRIPTION_{orderCode}", out Guid subcriptionId) && _memoryCache.TryGetValue($"USER_{orderCode}", out Guid userId) && _memoryCache.TryGetValue($"PRICE_{orderCode}", out int price) && _memoryCache.TryGetValue($"CHECKOUTURL_{orderCode}", out string checkoutUrl))
             {
                 if (paymentStatus.status == "PAID")
                 {
@@ -100,6 +102,21 @@ namespace Server.Infrastructure.Services
                             IsDeleted = false
                         };
                         await _unitOfWork.subcribeRepository.AddSubcribeAsync(subcribe);
+                        var payment = new Payment
+                        {
+                            UserId = userId,
+                            TotalAmount = price,
+                            SubcriptionId = subcriptionId,
+                            PaymentUrl = checkoutUrl,
+                            PaymentStatus = paymentStatus.status,
+                            PaymentDate = DateTime.UtcNow,
+                            PaymentMethod = "ONLINE",
+                            TransactionId = orderCode.ToString(),
+                            CreationDate = DateTime.UtcNow,
+                            CreatedBy = userId,
+                            IsDeleted = false
+                        };
+                        await _unitOfWork.paymentRepository.AddPaymentAsync(payment);
                     }
 
                     return paymentStatus.status;
