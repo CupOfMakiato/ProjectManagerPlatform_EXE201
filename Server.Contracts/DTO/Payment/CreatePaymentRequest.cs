@@ -9,5 +9,6 @@ namespace Server.Contracts.DTO.Payment
     public class CreatePaymentRequest
     {
         public Guid SubcriptionId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

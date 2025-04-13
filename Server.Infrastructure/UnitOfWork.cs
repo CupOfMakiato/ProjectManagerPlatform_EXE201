@@ -24,6 +24,7 @@ namespace Server.Infrastructure
         private readonly IAttachmentRepository _attachmentRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly ISubcriptionRepository _subcriptionRepository;
+        private readonly ISubcribeRepository _subcribeRepository;
 
 
 
@@ -32,7 +33,7 @@ namespace Server.Infrastructure
         public UnitOfWork(AppDbContext dbContext, ISubCategoryRepository subCategoryRepository, ICategoryRepository categoryRepository,
             IAuthRepository authRepository, IUserRepository userRepository, IBoardRepository boardRepository, ICardRepository cardRepository,
             IColumnRepository columnRepository, IAttachmentRepository attachmentRepository, INotificationRepository notificationRepository,
-            ISubcriptionRepository subcriptionRepository)
+            ISubcriptionRepository subcriptionRepository, ISubcribeRepository subcribeRepository)
         {
             _dbContext = dbContext;
             _subCategoryRepository = subCategoryRepository;
@@ -45,7 +46,7 @@ namespace Server.Infrastructure
             _attachmentRepository = attachmentRepository;
             _notificationRepository = notificationRepository;
             _subcriptionRepository = subcriptionRepository;
-
+            _subcribeRepository = subcribeRepository;
         }
 
         public ICategoryRepository categoryRepository => _categoryRepository;
@@ -59,6 +60,7 @@ namespace Server.Infrastructure
         public IAttachmentRepository attachmentRepository => _attachmentRepository;
         public INotificationRepository notificationRepository => _notificationRepository;
         public ISubcriptionRepository subcriptionRepository => _subcriptionRepository;
+        public ISubcribeRepository subcribeRepository => _subcribeRepository;
 
 
         public async Task<int> SaveChangeAsync()

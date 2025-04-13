@@ -40,6 +40,7 @@ namespace Server.Application.Services
                 Data = result
             };
         }
+
         public async Task<Result<object>> AddNewSubcription(AddNewSubcriptionDTO AddNewSubcriptionDTO)
         {
             var user = await _unitOfWork.userRepository.GetByIdAsync(AddNewSubcriptionDTO.UserId);

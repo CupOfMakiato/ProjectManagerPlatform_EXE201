@@ -1,5 +1,6 @@
 ﻿    using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Net.payOS;
 using Server.Application.Interfaces;
 using Server.Contracts.DTO.Payment;
 using System;
@@ -31,5 +32,28 @@ namespace Server.API.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
+
+        [HttpGet("result")]
+        public async Task<IActionResult> PaymentResult([FromQuery] int orderCode, [FromQuery] string status)
+        {
+            try
+            {
+                var paymentStatus = await _paymentService.CheckPaymentStatusAsync(orderCode);
+                return Ok(new
+                {
+                    orderCode,
+                    redirectStatus = status, // status nhận từ query string: return/cancel
+                    paymentStatus,
+                    message = paymentStatus == "PAID" ? "Thanh toán thành công" :
+                              paymentStatus == "CANCELLED" ? "Giao dịch bị hủy" :
+                              "Giao dịch đang chờ xử lý"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
     }
 }

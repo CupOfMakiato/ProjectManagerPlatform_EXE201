@@ -10,5 +10,6 @@ namespace Server.Application.Interfaces
     public interface IPaymentService
     {
         Task<string> CreatePaymentLinkAsync(CreatePaymentRequest createPaymentRequest);
+        Task<string> CheckPaymentStatusAsync(int orderCode);
     }
 }
