@@ -69,6 +69,13 @@ namespace Server.Application.Services
             return mappedColumns;
         }
 
+        public async Task<List<ViewColumnDTO>> ViewArchivedColumnsByBoardId(Guid boardId)
+        {
+            var getColumns = await _unitOfWork.columnRepository.GetArchivedColumnByBoardId(boardId);
+            var mappedColumns = _mapper.Map<List<ViewColumnDTO>>(getColumns);
+            return mappedColumns;
+        }
+
         public async Task<Result<object>> AddNewColumn(AddColumsDTO addColumsDTO)
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
@@ -246,5 +253,152 @@ namespace Server.Application.Services
                 Data = null
             };
         }
+
+        public async Task<Result<object>> ViewAllCardsFromAColumn(Guid columnId)
+        {
+            // Check if the existingColumn exists
+            var existingColumn = await _unitOfWork.columnRepository.GetColumnsById(columnId);
+            if (existingColumn == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Column not found",
+                    Data = null
+                };
+            }
+            var openCards = await _unitOfWork.cardRepository.GetOpenCardsByColumnId(columnId);
+
+            var mappedCards = _mapper.Map<List<ViewCardDTO>>(openCards);
+
+            return new Result<object>
+            {
+                Error = 0,
+                Message = "Cards retrieved successfully",
+                Data = mappedCards
+            };
+        }
+
+        public async Task<Result<object>> ArchiveAllCardsInColumn(Guid columnId)
+        {
+            var cardsInColumn = await _unitOfWork.cardRepository.GetCardsByColumnId(columnId);
+
+            if (cardsInColumn == null || !cardsInColumn.Any())
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "No cards found in this column",
+                    Data = null
+                };
+            }
+
+            var cardsToArchive = cardsInColumn
+                .Where(c => c.Status != CardStatus.Closed)
+                .ToList();
+
+            if (!cardsToArchive.Any())
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "All cards in this column are already archived",
+                    Data = null
+                };
+            }
+
+            foreach (var card in cardsToArchive)
+            {
+                card.Status = CardStatus.Closed;
+                _unitOfWork.cardRepository.Update(card);
+            }
+
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0
+                    ? $"{cardsToArchive.Count} card(s) archived successfully"
+                    : "Failed to archive cards",
+                Data = cardsToArchive
+            };
+        }
+
+        public async Task<Result<object>> ArchiveColumn(Guid columnId)
+        {
+            var existingColumn = await _unitOfWork.columnRepository.GetColumnsById(columnId);
+            if (existingColumn == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Column not found",
+                    Data = null
+                };
+            }
+
+            if (existingColumn.Status == ColumnStatus.Closed)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Column is already archived",
+                    Data = null
+                };
+            }
+
+            existingColumn.Status = ColumnStatus.Closed;
+            _unitOfWork.columnRepository.Update(existingColumn);
+
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0 ? "Column archived successfully" : "Failed to archive column",
+                Data = existingColumn
+            };
+        }
+
+
+        public async Task<Result<object>> UnarchiveColumn(Guid columnId)
+        {
+            var existingColumn = await _unitOfWork.columnRepository.GetColumnsById(columnId);
+            if (existingColumn == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Column not found",
+                    Data = null
+                };
+            }
+
+            if (existingColumn.Status == ColumnStatus.Open)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Column is already opened",
+                    Data = null
+                };
+            }
+
+            existingColumn.Status = ColumnStatus.Open;
+
+            _unitOfWork.columnRepository.Update(existingColumn);
+
+            // Save the changes
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = result > 0 ? 0 : 1,
+                Message = result > 0 ? "Column unarchived successfully" : "Failed to unarchive column",
+                Data = existingColumn
+            };
+        }
+
     }
 }

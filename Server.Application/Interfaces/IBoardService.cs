@@ -29,7 +29,7 @@ namespace Server.Application.Interfaces
         // Delete
         Task<Result<object>> DeleteBoard(Guid boardId);
         //view cards
-        Task<Result<object>> ViewAllCardsFromABoard(Guid boardId);
+        Task<Result<object>> ViewArchivedCardsFromABoard(Guid boardId);
 
         // Filter 
     }
