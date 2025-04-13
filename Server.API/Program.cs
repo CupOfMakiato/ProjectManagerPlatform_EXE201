@@ -105,6 +105,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
 
 
 var app = builder.Build();
