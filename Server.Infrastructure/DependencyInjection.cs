@@ -83,14 +83,14 @@ namespace Server.Infrastructure
             //    ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!)
             //);
 
-            //services.AddSingleton<ISqlNotificationService>(sp =>
-            //{
-            //    var hubContext = sp.GetRequiredService<IHubContext<NotificationHub>>();
-            //    var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-            //    var sqlNotificationService = new SqlNotificationService(serviceScopeFactory, hubContext);
+            services.AddSingleton<ISqlNotificationService>(sp =>
+            {
+                var hubContext = sp.GetRequiredService<IHubContext<NotificationHub>>();
+                var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                var sqlNotificationService = new SqlNotificationService(serviceScopeFactory, hubContext);
 
-            //    return sqlNotificationService;
-            //});
+                return sqlNotificationService;
+            });
 
 
 
