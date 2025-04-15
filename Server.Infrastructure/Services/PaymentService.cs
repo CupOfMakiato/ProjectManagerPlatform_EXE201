@@ -58,8 +58,8 @@ namespace Server.Infrastructure.Services
                 return "You have purchased this service package";
             }
             int code = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
-            var returnUrl = $"{_domain}api/payment/result?orderCode={code}&status=return";
-            var cancelUrl = $"{_domain}api/payment/result?orderCode={code}&status=cancel";
+            var returnUrl = $"{_domain}payment/successful";
+            var cancelUrl = $"{_domain}payment/cancel";
             var paymentData = new PaymentData(
                 orderCode: code,
                 amount: (int)getSubcription.Price,
