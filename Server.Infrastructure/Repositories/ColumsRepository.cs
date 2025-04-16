@@ -74,5 +74,15 @@ namespace Server.Infrastructure.Repositories
         {
             return await _dbContext.Columns.FirstOrDefaultAsync(c => c.CollumnPosition == position && c.BoardId == boardId);
         }
+
+        public async Task<List<Column>> GetOpenColumnsByBoardId(Guid boardId)
+        {
+            return await _dbContext.Columns
+               .Include(c => c.Board) // Include the column to ensure relational integrity
+               .Include(c => c.ColumnCreatedByUser)
+               .Where(c => c.Status == ColumnStatus.Open)
+               .OrderBy(c => c.CollumnPosition) // Order by position within the column
+               .ToListAsync();
+        }
     }
 }
