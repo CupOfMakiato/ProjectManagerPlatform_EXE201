@@ -81,14 +81,21 @@ builder.Services.AddControllers()
     });
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins",
+    options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.AllowAnyOrigin()
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
+            builder.WithOrigins(
+                "http://localhost:3000",
+                "https://manager-task-three.vercel.app",
+                "https://promanager.me",
+                "http://promanager.me"
+                )
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
         });
 });
+
 
 // Kestrel File Upload Size
 
@@ -131,7 +138,7 @@ else
 
 app.UseExceptionHandler("/Error");
 
-app.UseCors("AllowAllOrigins");
+app.UseCors("AllowSpecificOrigin");
 
 
 
