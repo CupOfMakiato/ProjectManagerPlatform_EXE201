@@ -15,6 +15,7 @@ namespace Server.Application.Repositories
         //Task<List<Column>> GetAllArchivedColumns();
         //Task<Column> GetColumnById(Guid id);
         Task<Column> GetColumnsById(Guid id);
+        Task<List<Column>> GetOpenColumnsByBoardId(Guid boardId);
         Task<List<Column>> GetListColumns();
         Task<List<Column>> GetListColumnByBoardId(Guid boardId);
         Task<Column> GetColumnByPositionAndBoardId(int position, Guid boardId);

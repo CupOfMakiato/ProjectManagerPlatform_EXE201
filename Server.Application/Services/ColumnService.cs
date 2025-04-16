@@ -137,7 +137,71 @@ namespace Server.Application.Services
 
         public async Task<Result<object>> MoveColumnInBoard(MoveColumnDTO moveColumnDTO)
         {
-            var getAllColumn = await _columnRepository.GetListColumns();
+            var column = await _unitOfWork.columnRepository.GetByIdAsync(moveColumnDTO.ColumnId);
+            if (column == null)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Column not found",
+                    Data = null
+                };
+            }
+
+            // Ensure the card belogs to the specified column
+            if (column.BoardId != moveColumnDTO.BoardId)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Column does not belong to the this board",
+                    Data = null
+                };
+            }
+
+            // Fetch all open cards in the column (ordered by position)
+            var columns = await _unitOfWork.columnRepository.GetOpenColumnsByBoardId(moveColumnDTO.BoardId);
+
+            // Validate that the new position is within the allowed range
+            // Allow moving to the last position (new position == cards.Count)
+            if (moveColumnDTO.ColumnPosition < 1 || moveColumnDTO.ColumnPosition > columns.Count)
+            {
+                return new Result<object>
+                {
+                    Error = 1,
+                    Message = "Invalid position!",
+                    Data = null
+                };
+            }
+
+            // Ensure position starts from 1 instead of 0
+            columns = columns.OrderBy(c => c.CollumnPosition).ToList(); // Sort the cards by position
+            columns.Remove(column);
+            columns.Insert(moveColumnDTO.ColumnPosition - 1, column); // Insert the card at the new position 
+
+            // Reassign positions sequentially 
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columns[i].CollumnPosition = i + 1; // positioning from 1 instead of 0
+                _unitOfWork.columnRepository.Update(columns[i]);
+            }
+
+            // Save changes to the database
+            await _unitOfWork.SaveChangeAsync();
+
+            return new Result<object>
+            {
+                Error = 0,
+                Message = "Column moved successfully",
+                Data = column
+            };
+
+
+
+
+
+
+            /*var getAllColumn = await _columnRepository.GetListColumns();
             var getColumn = await _columnRepository.GetColumnsById(moveColumnDTO.ColumnId);
             var getColumnMoveTo = await _columnRepository.GetColumnByPositionAndBoardId(moveColumnDTO.ColumnPosition, moveColumnDTO.BoardId);
             var currentPosition = getColumn.CollumnPosition;
@@ -189,7 +253,7 @@ namespace Server.Application.Services
                     Message = "Column position was changed",
                     Data = null
                 };
-            }
+            }*/
         }
 
         public async Task<Result<object>> CopyColumn(CopyColumn copyColumn)
