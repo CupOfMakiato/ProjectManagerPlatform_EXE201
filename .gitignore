@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /entrypoint.sh
 /init.sql
 /sql-init
+/docker-compose.yml
